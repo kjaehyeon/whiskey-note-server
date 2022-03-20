@@ -1,0 +1,10 @@
+debug: true
+
+spring:
+  profiles:
+    default: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/whiskey_note_db?useSSL=false&serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: ''

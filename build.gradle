@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.4"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+    }
+}
+
+subprojects { //공통 적용
+    apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.example.springpracticecalendar'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+    }
+
+    task prepareKotlinBuildScriptModel {
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'junit', module: 'junit'
+        }
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+project(':whiskey-note-core'){
+    bootJar { enabled = false }
+    jar { enabled = true }
+}
+
+project(':whiskey-note-api'){
+    bootJar { enabled = true }
+    jar { enabled = true }
+    dependencies {
+        implementation project(':whiskey-note-core')
+    }
+}
