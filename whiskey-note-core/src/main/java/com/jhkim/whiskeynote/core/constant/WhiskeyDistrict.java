@@ -16,8 +16,8 @@ public enum WhiskeyDistrict {
     ISLE_OF_SKYE("스카이섬"),
     ORKNEY("오크니"),
     ARRAN("아란"),
-    ISLE_OF_JURA("주라"),
-    ISLE_OF_MULL("뮬");
+    ISLE_OF_JURA("주라섬"),
+    ISLE_OF_MULL("뮬섬");
 
     private final String name_ko;
 }

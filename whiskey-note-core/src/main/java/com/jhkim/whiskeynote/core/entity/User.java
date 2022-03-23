@@ -1,6 +1,5 @@
 package com.jhkim.whiskeynote.core.entity;
 
-import com.jhkim.whiskeynote.core.constant.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +18,5 @@ public class User extends BaseEntity{
     private String username;
     private String password;
     private String email;
-    private UserRole role;
+    private String authority;
 }
