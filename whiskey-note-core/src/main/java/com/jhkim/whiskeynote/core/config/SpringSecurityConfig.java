@@ -20,9 +20,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .anyRequest().permitAll();
 
+        http.formLogin()
+                .loginProcessingUrl("/api/auth/sign-in")
+                .permitAll();
+
         http.logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/sign-out"))
-                .logoutSuccessUrl("/")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/sign-out"))
                 .invalidateHttpSession(true)
                 .deleteCookies();
     }

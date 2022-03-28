@@ -1,12 +1,15 @@
 package com.jhkim.whiskeynote.api.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Getter
+@AllArgsConstructor(staticName = "of")
 public class SignUpRequest {
     @NotBlank
     private String username;

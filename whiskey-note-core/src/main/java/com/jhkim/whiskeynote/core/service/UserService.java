@@ -2,6 +2,8 @@ package com.jhkim.whiskeynote.core.service;
 
 import com.jhkim.whiskeynote.core.dto.UserCreateRequest;
 import com.jhkim.whiskeynote.core.entity.User;
+import com.jhkim.whiskeynote.core.exception.ErrorCode;
+import com.jhkim.whiskeynote.core.exception.GeneralException;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +20,7 @@ public class UserService {
     public User create(UserCreateRequest userCreateRequest){
         userRepository.findUserByEmail(userCreateRequest.getEmail())
                 .ifPresent( user -> {
-                    throw new RuntimeException("유저가 이미 존재합니다");
+                    throw new GeneralException(ErrorCode.ALREADY_EXISTS_USER);
                 });
         return userRepository.save(userCreateRequest.toEntity(passwordEncoder));
     }

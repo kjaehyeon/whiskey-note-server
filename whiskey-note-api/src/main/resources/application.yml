@@ -17,3 +17,16 @@ spring:
     hibernate:
       ddl-auto: update
     database: mysql
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database: h2
+    hibernate:
+      ddl-auto: create

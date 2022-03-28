@@ -18,7 +18,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -31,17 +31,17 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/sign-in")
-    public ResponseEntity<SignInResponse> signIn(
-            @Valid @RequestBody SignInRequest signInRequest
-    ){
-        return new ResponseEntity<>(authService.signIn(signInRequest), HttpStatus.OK);
-    }
-
-    @PostMapping("/sign-out")
-    public ResponseEntity<Void> signOut(
-    ){
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/sign-in")
+//    public ResponseEntity<SignInResponse> signIn(
+//            @Valid @RequestBody SignInRequest signInRequest
+//    ){
+//        return new ResponseEntity<>(authService.signIn(signInRequest), HttpStatus.OK);
+//    }
+//
+//    @PostMapping("/sign-out")
+//    public ResponseEntity<Void> signOut(
+//    ){
+//        return ResponseEntity.ok().build();
+//    }
 
 }
