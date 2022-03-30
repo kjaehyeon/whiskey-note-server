@@ -26,11 +26,4 @@ public class AuthService {
                 .build()
         );
     }
-
-    public SignInResponse signIn(
-            SignInRequest signInRequest
-    ){
-        return new SignInResponse();
-    }
-
 }

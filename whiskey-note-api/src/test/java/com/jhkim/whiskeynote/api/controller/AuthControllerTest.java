@@ -3,21 +3,16 @@ package com.jhkim.whiskeynote.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jhkim.whiskeynote.api.dto.SignInRequest;
 import com.jhkim.whiskeynote.api.dto.SignUpRequest;
-import com.jhkim.whiskeynote.api.service.AuthService;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
-import com.jhkim.whiskeynote.core.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,8 +47,7 @@ class AuthControllerTest {
                 post("/api/auth/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(signUpRequest))
-        ).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        ).andExpect(status().isOk());
     }
 
     @DisplayName("[AUTH][POST] 회원가입 - 유효하지 않은 정보 받으면, HTTP 400 리턴")
@@ -85,7 +79,7 @@ class AuthControllerTest {
         );
 
         mvc.perform(post("/api/auth/sign-in")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .content(mapper.writeValueAsString(signInRequest)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
