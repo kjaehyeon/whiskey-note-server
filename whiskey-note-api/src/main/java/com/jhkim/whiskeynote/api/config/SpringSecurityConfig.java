@@ -1,4 +1,4 @@
-package com.jhkim.whiskeynote.core.config;
+package com.jhkim.whiskeynote.api.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

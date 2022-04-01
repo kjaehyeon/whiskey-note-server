@@ -3,6 +3,7 @@ debug: true
 spring:
   profiles:
     default: dev
+    include: keys
   datasource:
     url: jdbc:mysql://localhost:3306/whiskey_note_db?useSSL=false&serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,6 +24,8 @@ spring:
   config:
     activate:
       on-profile: test
+  profiles:
+    include: keys
   h2:
     console:
       enabled: true

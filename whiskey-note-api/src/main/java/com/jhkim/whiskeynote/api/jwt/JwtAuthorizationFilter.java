@@ -1,4 +1,4 @@
-package com.jhkim.whiskeynote.core.jwt;
+package com.jhkim.whiskeynote.api.jwt;
 
 public class JwtAuthorizationFilter {
 }

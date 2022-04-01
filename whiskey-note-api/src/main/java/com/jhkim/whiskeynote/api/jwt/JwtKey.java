@@ -1,6 +1,8 @@
-package com.jhkim.whiskeynote.core.jwt;
+package com.jhkim.whiskeynote.api.jwt;
 
+import com.jhkim.whiskeynote.api.config.JwtKeyConfig;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 
 import java.nio.charset.StandardCharsets;
@@ -11,20 +13,23 @@ import java.util.Random;
 /**
  * JWT key를 제공하고 조회한다.
  */
-public class JwtKey {
 
-    private static final Map<String, String> SECRET_KEY_SET = Map.of(
-            "key1" , "",
-        "key2" , "",
-        "key3" , ""
+@RequiredArgsConstructor
+public class JwtKey {
+    private final JwtKeyConfig jwtKeyConfig;
+
+    private final Map<String, String> SECRET_KEY_SET = Map.of(
+            "key1" , jwtKeyConfig.getKey1(),
+        "key2" , jwtKeyConfig.getKey2(),
+        "key3" , jwtKeyConfig.getKey3()
     );
-    private static final String[] KID_SET = SECRET_KEY_SET.keySet().toArray(new String[0]);
-    private static Random randomIndex = new Random();
+    private final String[] KID_SET = SECRET_KEY_SET.keySet().toArray(new String[0]);
+    private Random randomIndex = new Random();
 
     /**
      * SECRET_KEY_SET에서 랜덤키 가져옴
      */
-    public static Pair<String, Key> getRandomKey(){
+    public Pair<String, Key> getRandomKey(){
         String kid = KID_SET[randomIndex.nextInt(KID_SET.length)];
         String secretKey = SECRET_KEY_SET.get(kid);
         return Pair.of(
@@ -38,7 +43,7 @@ public class JwtKey {
      * @param kid
      * @return
      */
-    public static Key getKey(String kid){
+    public Key getKey(String kid){
         String key = SECRET_KEY_SET.getOrDefault(kid, null);
         if(key == null)
             return null;
