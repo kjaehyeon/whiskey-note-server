@@ -2,12 +2,18 @@ package com.jhkim.whiskeynote.api.exception;
 
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import java.security.SignatureException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,6 +33,32 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException ex){
         final ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
+        return new ResponseEntity<>(
+                new ErrorResponse(errorCode.getCode(), errorCode.getMessage()),
+                errorCode.getHttpStatus()
+        );
+    }
+
+    //jwt token Expired
+    @ExceptionHandler(value = {
+            ExpiredJwtException.class,
+            UnsupportedJwtException.class,
+            MalformedJwtException.class,
+            SignatureException.class
+    })
+    public ResponseEntity<ErrorResponse> handle(){
+        final ErrorCode errorCode = ErrorCode.TOKEN_EXPIRED;
+        return new ResponseEntity<>(
+                new ErrorResponse(errorCode.getCode(), errorCode.getMessage()),
+                errorCode.getHttpStatus()
+        );
+    }
+
+    @ExceptionHandler(Exception.class) // 최후에 보루로써 모든 예외를 처리하는 핸들러
+    public ResponseEntity<ErrorResponse> handleException(
+            Exception e, HttpServletRequest request
+    ){
+        final ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
         return new ResponseEntity<>(
                 new ErrorResponse(errorCode.getCode(), errorCode.getMessage()),
                 errorCode.getHttpStatus()

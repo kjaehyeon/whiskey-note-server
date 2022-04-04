@@ -14,6 +14,7 @@ public enum ErrorCode {
     NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found"),
     ALREADY_EXISTS_USER(10003, HttpStatus.CONFLICT, "User Already Exists"),
     USER_NOT_FOUND(10004, HttpStatus.BAD_REQUEST, "User Not Found"),
+    TOKEN_EXPIRED(10005, HttpStatus.UNAUTHORIZED, "token Expired"),
 
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error")
     ;
