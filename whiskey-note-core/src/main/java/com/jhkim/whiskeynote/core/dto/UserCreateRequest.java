@@ -20,6 +20,7 @@ public class UserCreateRequest {
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
+                .authority(authority)
                 .build();
     }
 }

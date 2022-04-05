@@ -1,7 +1,7 @@
 package com.jhkim.whiskeynote.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jhkim.whiskeynote.api.dto.SignInRequest;
+import com.jhkim.whiskeynote.api.dto.LogInRequest;
 import com.jhkim.whiskeynote.api.dto.SignUpRequest;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -73,17 +73,17 @@ class AuthControllerTest {
     @DisplayName("[AUTH][POST] 로그인 - 정상 로그인시 accessToken 발급")
     @Test
     void givenNormalSignInRequest_whenSignIn_thenReturnAccessToken() throws Exception{
-        SignInRequest signInRequest = SignInRequest.of(
+        LogInRequest signInRequest = LogInRequest.of(
                 "user1@email.com",
                 "password1"
         );
 
-        mvc.perform(post("/api/auth/sign-in")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
+        mvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .content(mapper.writeValueAsString(signInRequest)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.token").isNotEmpty());
+                .andExpect(jsonPath("$.Jwt-Token").isNotEmpty());
     }
 
 }

@@ -18,10 +18,11 @@ public class UserService {
 
     @Transactional
     public User create(UserCreateRequest userCreateRequest){
-        userRepository.findUserByEmail(userCreateRequest.getEmail())
+        userRepository.findUserByUsername(userCreateRequest.getUsername())
                 .ifPresent( user -> {
                     throw new GeneralException(ErrorCode.ALREADY_EXISTS_USER);
                 });
         return userRepository.save(userCreateRequest.toEntity(passwordEncoder));
     }
+
 }

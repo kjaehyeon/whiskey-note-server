@@ -22,11 +22,16 @@ import java.util.Random;
 public class JwtKey {
     private final JwtKeyConfig jwtKeyConfig;
 
-    private final Map<String, String> SECRET_KEY_SET = Map.of(
-            "key1" , jwtKeyConfig.getKey1(),
-        "key2" , jwtKeyConfig.getKey2(),
-        "key3" , jwtKeyConfig.getKey3()
-    );
+//    private final Map<String, String> SECRET_KEY_SET = Map.of(
+//            "key1" , jwtKeyConfig.getKey1(),
+//        "key2" , jwtKeyConfig.getKey2(),
+//        "key3" , jwtKeyConfig.getKey3()
+//    );
+private final Map<String, String> SECRET_KEY_SET = Map.of(
+        "key1" , "akldfaadfjkasldjfasjdfkasovnaosdfnalskdfjlasdkjflasdjflaksdjf",
+        "key2" , "dkjfiasdfienivnvbnasdjkhfoaskdjflaskdjflaskdjflaksdjflkajodhs",
+        "key3" , "adsoifhbnvaanvoaisdofbnasdoifhasdlkfnasldkfhjaosdkflkdjfoaiwe"
+);
     private final String[] KID_SET = SECRET_KEY_SET.keySet().toArray(new String[0]);
     private Random randomIndex = new Random();
 

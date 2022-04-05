@@ -5,5 +5,5 @@ package com.jhkim.whiskeynote.api.jwt;
  */
 public class JwtProperties {
     public static final int EXPIRATION_TIME = 600000; // 10분
-    public static final String KEY_NAME = "JWT-AUTHENTICATION";
+    public static final String KEY_NAME = "Jwt-Token";
 }

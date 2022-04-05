@@ -39,14 +39,14 @@ public class GlobalExceptionHandler {
         );
     }
 
-    //jwt token Expired
+    //jwt token Expired or Invalid
     @ExceptionHandler(value = {
             ExpiredJwtException.class,
             UnsupportedJwtException.class,
             MalformedJwtException.class,
             SignatureException.class
     })
-    public ResponseEntity<ErrorResponse> handle(){
+    public ResponseEntity<ErrorResponse> handle(Exception e){
         final ErrorCode errorCode = ErrorCode.TOKEN_EXPIRED;
         return new ResponseEntity<>(
                 new ErrorResponse(errorCode.getCode(), errorCode.getMessage()),
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(Exception.class) // 최후에 보루로써 모든 예외를 처리하는 핸들러
+    @ExceptionHandler(Exception.class) // 나머지 모든 예외를 처리하는 핸들러
     public ResponseEntity<ErrorResponse> handleException(
             Exception e, HttpServletRequest request
     ){

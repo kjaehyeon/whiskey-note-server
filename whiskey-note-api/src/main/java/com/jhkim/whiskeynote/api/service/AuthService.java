@@ -1,11 +1,17 @@
 package com.jhkim.whiskeynote.api.service;
 
-import com.jhkim.whiskeynote.api.dto.SignInRequest;
-import com.jhkim.whiskeynote.api.dto.SignInResponse;
+import com.jhkim.whiskeynote.api.dto.LogInRequest;
+import com.jhkim.whiskeynote.api.dto.LoginResponse;
 import com.jhkim.whiskeynote.api.dto.SignUpRequest;
+import com.jhkim.whiskeynote.api.jwt.JwtUtils;
 import com.jhkim.whiskeynote.core.dto.UserCreateRequest;
+import com.jhkim.whiskeynote.core.entity.User;
+import com.jhkim.whiskeynote.core.exception.ErrorCode;
+import com.jhkim.whiskeynote.core.exception.GeneralException;
+import com.jhkim.whiskeynote.core.repository.UserRepository;
 import com.jhkim.whiskeynote.core.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +19,9 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
     public void signUp(
             SignUpRequest signUpRequest
@@ -25,5 +34,29 @@ public class AuthService {
                         .authority("ROLE_USER")
                 .build()
         );
+    }
+
+    public void signUpAdmin(
+            SignUpRequest signUpRequest
+    ){
+        userService.create(
+                UserCreateRequest.builder()
+                        .email(signUpRequest.getEmail())
+                        .password(signUpRequest.getPassword())
+                        .username(signUpRequest.getUsername())
+                        .authority("ROLE_ADMIN")
+                        .build()
+        );
+    }
+
+    public LoginResponse login(LogInRequest logInRequest) {
+        User user = userRepository.findUserByUsername(logInRequest.getUsername())
+                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+
+        if(!passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())){
+            throw new GeneralException(ErrorCode.PASSWORD_NOT_MATCH);
+        }
+
+        return LoginResponse.of(jwtUtils.createToken(user));
     }
 }
