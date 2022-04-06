@@ -50,6 +50,7 @@ public class AuthService {
     }
 
     public LoginResponse login(LogInRequest logInRequest) {
+
         User user = userRepository.findUserByUsername(logInRequest.getUsername())
                 .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
 

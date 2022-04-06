@@ -41,12 +41,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         final String token = request.getHeader(JwtProperties.KEY_NAME);
         if(token != null){
             //authentication을 만들어서 SecurityContext에 넣어준다.
-            try{
-                Authentication authentication = this.getUsernamePasswordAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }catch (Exception ignored){
-                log.warn("Invalid Jwt Signature");
-            }
+            Authentication authentication = this.getUsernamePasswordAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
     }

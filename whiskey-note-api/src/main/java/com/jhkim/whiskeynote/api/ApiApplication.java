@@ -17,11 +17,8 @@ public class ApiApplication {
 }
 
 /**
- * 현재 jwt authentication은 완료 but 유효하지 않은 토큰일때 GeneralException이 아닌 그냥 403으로 응답함
- *
- * 아직 Authority는 테스트 안해봄
  *
  * antpatterns는 좀더 찾아보기
- *
  * 테스트 코드 작성 마무리하자
+ * 권한 없을 때 GeneralException 아니고 그냥 403던짐
  */

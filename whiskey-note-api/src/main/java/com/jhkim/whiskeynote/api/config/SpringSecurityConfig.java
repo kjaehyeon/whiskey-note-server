@@ -1,6 +1,7 @@
 package com.jhkim.whiskeynote.api.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jhkim.whiskeynote.api.exception.ExceptionHandlerFilter;
 import com.jhkim.whiskeynote.api.jwt.JwtAuthorizationFilter;
 import com.jhkim.whiskeynote.api.jwt.JwtUtils;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
@@ -32,18 +33,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(
-                new UsernamePasswordAuthenticationFilter(),
-                UsernamePasswordAuthenticationFilter.class
+            new ExceptionHandlerFilter(),
+            UsernamePasswordAuthenticationFilter.class
         ).addFilterBefore(
                 new JwtAuthorizationFilter(
                         userRepository,
                         jwtUtils
-                ),
-                BasicAuthenticationFilter.class
+                ), BasicAuthenticationFilter.class
         );
 
         http.authorizeRequests()
                 .antMatchers("/test").authenticated()
+                .antMatchers("/test/admin").hasRole("ADMIN")
+                .antMatchers("/test/user").hasRole("USER")
                 .anyRequest().permitAll();
     }
 }

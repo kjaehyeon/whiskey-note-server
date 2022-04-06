@@ -16,7 +16,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(10004, HttpStatus.BAD_REQUEST, "User Not Found"),
     PASSWORD_NOT_MATCH(10005, HttpStatus.BAD_REQUEST, "Password Not Matches"),
     TOKEN_EXPIRED(10006, HttpStatus.UNAUTHORIZED, "Token Expired"),
-    AUTHENTICATION_FAIL(10007, HttpStatus.UNAUTHORIZED, "Authentication fail"),
+    INVALID_TOKEN(10007, HttpStatus.UNAUTHORIZED, "Invalid Token"),
     FORBIDDEN(10008, HttpStatus.FORBIDDEN, "Forbidden Access"),
 
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error")
