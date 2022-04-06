@@ -21,7 +21,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
-    private final ObjectMapper mapper;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

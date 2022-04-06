@@ -2,14 +2,13 @@ package com.jhkim.whiskeynote.api.jwt;
 
 import com.jhkim.whiskeynote.api.config.JwtKeyConfig;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -17,23 +16,21 @@ import java.util.Random;
  * Key Rolling을 지원한다.
  */
 
-@RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtKey {
-    private final JwtKeyConfig jwtKeyConfig;
 
-//    private final Map<String, String> SECRET_KEY_SET = Map.of(
-//            "key1" , jwtKeyConfig.getKey1(),
-//        "key2" , jwtKeyConfig.getKey2(),
-//        "key3" , jwtKeyConfig.getKey3()
-//    );
-private final Map<String, String> SECRET_KEY_SET = Map.of(
-        "key1" , "akldfaadfjkasldjfasjdfkasovnaosdfnalskdfjlasdkjflasdjflaksdjf",
-        "key2" , "dkjfiasdfienivnvbnasdjkhfoaskdjflaskdjflaskdjflaksdjflkajodhs",
-        "key3" , "adsoifhbnvaanvoaisdofbnasdoifhasdlkfnasldkfhjaosdkflkdjfoaiwe"
-);
-    private final String[] KID_SET = SECRET_KEY_SET.keySet().toArray(new String[0]);
+    private final HashMap<String, String> SECRET_KEY_SET;
+    private final String[] KID_SET;
     private Random randomIndex = new Random();
+
+    public JwtKey(JwtKeyConfig jwtKeyConfig){
+        SECRET_KEY_SET = new HashMap<>();
+        SECRET_KEY_SET.put("key1", jwtKeyConfig.getKey1());
+        SECRET_KEY_SET.put("key2", jwtKeyConfig.getKey2());
+        SECRET_KEY_SET.put("key3", jwtKeyConfig.getKey3());
+        KID_SET = SECRET_KEY_SET.keySet().toArray(new String[0]);
+    }
 
     /**
      * SECRET_KEY_SET에서 랜덤키 가져옴

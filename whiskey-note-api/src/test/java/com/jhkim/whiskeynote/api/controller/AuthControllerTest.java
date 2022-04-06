@@ -74,7 +74,7 @@ class AuthControllerTest {
     @Test
     void givenNormalSignInRequest_whenSignIn_thenReturnAccessToken() throws Exception{
         LogInRequest signInRequest = LogInRequest.of(
-                "user1@email.com",
+                "user1",
                 "password1"
         );
 
@@ -83,7 +83,7 @@ class AuthControllerTest {
                 .content(mapper.writeValueAsString(signInRequest)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.Jwt-Token").isNotEmpty());
+                .andExpect(jsonPath("$.token").isNotEmpty());
     }
 
 }

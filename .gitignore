@@ -5,7 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-resources/application-keys.yml
+resources/jwt-secret-keys.properties
 
 ### STS ###
 .apt_generated
@@ -37,3 +37,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/whiskey-note-api/src/main/resources/jwt-secret-keys.properties

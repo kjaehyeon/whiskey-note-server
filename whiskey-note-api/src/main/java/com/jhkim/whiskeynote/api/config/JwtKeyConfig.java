@@ -1,16 +1,18 @@
 package com.jhkim.whiskeynote.api.config;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Getter
-@ConstructorBinding
-@ConfigurationProperties("keys")
-@RequiredArgsConstructor
+@Configuration
+@PropertySource("classpath:jwt-secret-keys.properties")
 public class JwtKeyConfig {
-    private final String key1;
-    private final String key2;
-    private final String key3;
+    @Value("${keys.key1}")
+    private String key1;
+    @Value("${keys.key2}")
+    private String key2;
+    @Value("${keys.key3}")
+    private String key3;
 }

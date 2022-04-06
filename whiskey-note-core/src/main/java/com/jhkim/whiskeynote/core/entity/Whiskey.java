@@ -1,6 +1,6 @@
 package com.jhkim.whiskeynote.core.entity;
 
-import com.jhkim.whiskeynote.core.constant.Bool_3;
+import com.jhkim.whiskeynote.core.constant.Bool3;
 import com.jhkim.whiskeynote.core.constant.WhiskeyCategory;
 import com.jhkim.whiskeynote.core.constant.WhiskeyDistrict;
 import lombok.AllArgsConstructor;
@@ -37,9 +37,9 @@ public class Whiskey extends BaseEntity{
     private Integer size; //밀리리터
     private String bottled_for;
 
-    private Bool_3 colored;
-    private Bool_3 chillfilterd;
-    private Bool_3 single_cask;
-    private Bool_3 cask_strength;
-    private Bool_3 small_batch;
+    private Bool3 colored;
+    private Bool3 chillfilterd;
+    private Bool3 single_cask;
+    private Bool3 cask_strength;
+    private Bool3 small_batch;
 }
