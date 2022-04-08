@@ -3,7 +3,10 @@ package com.jhkim.whiskeynote.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jhkim.whiskeynote.api.dto.LogInRequest;
 import com.jhkim.whiskeynote.api.dto.SignUpRequest;
+import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
+import com.jhkim.whiskeynote.core.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +27,19 @@ class AuthControllerTest {
 
     private final MockMvc mvc;
     private final ObjectMapper mapper;
+    private final UserRepository userRepository;
 
     public AuthControllerTest(
             @Autowired MockMvc mvc,
-            @Autowired ObjectMapper mapper
+            @Autowired ObjectMapper mapper,
+            @Autowired UserRepository userRepository
     ){
         this.mvc = mvc;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
+
+
 
     @DisplayName("[AUTH][POST] 회원가입 - 정상입력하면 회원정보 추가하고 HTTP 200 리턴")
     @Test
@@ -61,29 +69,35 @@ class AuthControllerTest {
         );
         //When & Then
         mvc.perform(
-                        post("/api/auth/sign-up")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(signUpRequest))
-                ).andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.VALIDATION_ERROR.getMessage()));
+                post("/api/auth/sign-up")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(signUpRequest))
+        ).andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.getCode()))
+        .andExpect(jsonPath("$.message").value(ErrorCode.VALIDATION_ERROR.getMessage()));
     }
 
     @DisplayName("[AUTH][POST] 로그인 - 정상 로그인시 accessToken 발급")
     @Test
     void givenNormalSignInRequest_whenSignIn_thenReturnAccessToken() throws Exception{
-        LogInRequest signInRequest = LogInRequest.of(
+        LogInRequest logInRequest = LogInRequest.of(
                 "user1",
                 "password1"
         );
-
+        //When&Then
         mvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .content(mapper.writeValueAsString(signInRequest)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.token").isNotEmpty());
+                .param("username", logInRequest.getUsername())
+                .param("password", logInRequest.getPassword())
+        ).andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.token").isNotEmpty());
     }
+
+    //회원정보 중복될때
+    //회원 아이디 틀렸을때
+    //회원 비밀번호 틀렸을때
+
 
 }

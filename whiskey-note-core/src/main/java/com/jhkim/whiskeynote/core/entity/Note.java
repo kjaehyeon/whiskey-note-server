@@ -18,7 +18,7 @@ public class Note extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "notebook_id")
-    private Notebook notebook;
+    private NoteBook notebook;
 
     @OneToOne
     @JoinColumn(name = "whiskey_id")
