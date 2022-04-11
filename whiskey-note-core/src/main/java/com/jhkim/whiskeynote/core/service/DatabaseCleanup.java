@@ -1,5 +1,7 @@
 package com.jhkim.whiskeynote.core.service;
 
+import com.google.common.base.CaseFormat;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -17,14 +19,13 @@ import java.util.stream.Collectors;
 public class DatabaseCleanup implements InitializingBean {
     @PersistenceContext
     private EntityManager entityManager;
-
     private List<String> tableNames;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         tableNames = entityManager.getMetamodel().getEntities().stream()
                 .filter(e -> e.getJavaType().getAnnotation(Entity.class) != null)
-                .map(EntityType::getName)
+                .map(e -> CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, e.getName()))
                 .collect(Collectors.toList());
     }
 

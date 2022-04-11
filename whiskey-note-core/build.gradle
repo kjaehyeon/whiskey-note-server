@@ -3,6 +3,7 @@ dependencies {
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'com.google.guava:guava:31.1-jre'
 
     //for test db
     runtimeOnly 'com.h2database:h2'

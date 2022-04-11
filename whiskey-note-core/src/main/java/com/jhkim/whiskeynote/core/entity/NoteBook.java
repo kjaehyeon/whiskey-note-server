@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "notebook")
+@Table(name = "note_book")
 @Entity
 public class NoteBook extends BaseEntity{
     private String title;

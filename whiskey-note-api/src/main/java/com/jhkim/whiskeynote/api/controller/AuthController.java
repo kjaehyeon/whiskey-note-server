@@ -35,9 +35,9 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @PostMapping(value = "/login")
     public ResponseEntity<LoginResponse> login(
-            @Valid LogInRequest logInRequest
+            @Valid @RequestBody LogInRequest logInRequest
     ){
         return new ResponseEntity<>(authService.login(logInRequest), HttpStatus.OK);
     }

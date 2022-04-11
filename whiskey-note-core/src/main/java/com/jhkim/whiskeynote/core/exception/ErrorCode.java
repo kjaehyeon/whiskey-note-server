@@ -12,7 +12,7 @@ public enum ErrorCode {
     BAD_REQUEST(10000, HttpStatus.BAD_REQUEST, "Bad request"),
     VALIDATION_ERROR(10001, HttpStatus.BAD_REQUEST, "Validation error"),
     NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found"),
-    ALREADY_EXISTS_USER(10003, HttpStatus.CONFLICT, "User Already Exists"),
+    USER_ALREADY_EXISTS(10003, HttpStatus.CONFLICT, "User Already Exists"),
     USER_NOT_FOUND(10004, HttpStatus.BAD_REQUEST, "User Not Found"),
     PASSWORD_NOT_MATCH(10005, HttpStatus.BAD_REQUEST, "Password Not Matches"),
     TOKEN_EXPIRED(10006, HttpStatus.UNAUTHORIZED, "Token Expired"),

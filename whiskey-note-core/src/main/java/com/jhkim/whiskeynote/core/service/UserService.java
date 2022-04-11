@@ -20,7 +20,7 @@ public class UserService {
     public User create(UserCreateRequest userCreateRequest){
         userRepository.findUserByUsername(userCreateRequest.getUsername())
                 .ifPresent( user -> {
-                    throw new GeneralException(ErrorCode.ALREADY_EXISTS_USER);
+                    throw new GeneralException(ErrorCode.USER_ALREADY_EXISTS);
                 });
         return userRepository.save(userCreateRequest.toEntity(passwordEncoder));
     }

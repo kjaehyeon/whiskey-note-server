@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class Note extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "notebook_id")
+    @JoinColumn(name = "note_book_id")
     private NoteBook notebook;
 
     @OneToOne
