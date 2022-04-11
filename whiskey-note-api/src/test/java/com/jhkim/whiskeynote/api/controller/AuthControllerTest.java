@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@DisplayName("API컨트롤러 통합테스트 - AUTH")
+@DisplayName("[통합테스트] API컨트롤러 - AUTH")
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
@@ -92,7 +92,7 @@ class AuthControllerTest {
     @Test
     void givenNormalSignInRequest_whenSignIn_thenReturnAccessToken() throws Exception{
         //given
-        create_normal_user("user1", "password1");
+        createNormalUser("user1", "password1");
         LogInRequest logInRequest = LogInRequest.of(
                 "user1",
                 "password1"
@@ -111,7 +111,7 @@ class AuthControllerTest {
     @Test
     void givenDuplicatedUser_whenSignUp_ThenReturnException() throws Exception{
         //Given
-        create_normal_user("user1", "password1");
+        createNormalUser("user1", "password1");
         SignUpRequest signUpRequest = SignUpRequest.of(
                 "user1",
                 "password1",
@@ -131,7 +131,7 @@ class AuthControllerTest {
     @Test
     void givenWrongUsername_whenSignIn_thenReturnException() throws Exception{
         //given
-        create_normal_user("user1", "password1");
+        createNormalUser("user1", "password1");
         LogInRequest logInRequest = LogInRequest.of(
                 "user2",
                 "password1"
@@ -151,7 +151,7 @@ class AuthControllerTest {
     @Test
     void givenWrongPassword_whenLogIn_thenReturnException() throws Exception{
         //given
-        create_normal_user("user1", "password1");
+        createNormalUser("user1", "password1");
         LogInRequest logInRequest = LogInRequest.of(
                 "user1",
                 "wrongpassword"
@@ -166,7 +166,7 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.code").value(ErrorCode.PASSWORD_NOT_MATCH.getCode()));
     }
 
-    private void create_normal_user(String username, String password){
+    private void createNormalUser(String username, String password){
         userRepository.save(User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))

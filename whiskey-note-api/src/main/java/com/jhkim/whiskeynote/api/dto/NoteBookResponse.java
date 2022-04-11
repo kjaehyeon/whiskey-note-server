@@ -1,6 +1,5 @@
 package com.jhkim.whiskeynote.api.dto;
 
-import com.jhkim.whiskeynote.core.entity.NoteBook;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,21 +10,14 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 @AllArgsConstructor(staticName = "of")
-public class NoteBookDto {
+public class NoteBookResponse {
+    @NotNull
+    private Long notebook_id;
+
     @NotBlank
     private String title;
 
     private Integer red;
     private Integer green;
     private Integer blue;
-
-    public NoteBook toEntity(){
-        return NoteBook.of(
-                title,
-                null,
-                red,
-                green,
-                blue
-        );
-    }
 }

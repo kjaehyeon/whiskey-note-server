@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @Builder
 @Table(name = "note_book")
 @Entity
