@@ -1,12 +1,16 @@
 package com.jhkim.whiskeynote.api.controller;
 
 import com.jhkim.whiskeynote.api.dto.NoteBookDto;
+import com.jhkim.whiskeynote.api.dto.NoteBookResponse;
 import com.jhkim.whiskeynote.api.dto.NoteDto;
 import com.jhkim.whiskeynote.api.service.NoteBookService;
 import com.jhkim.whiskeynote.core.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,47 +19,52 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notebook")
+@Slf4j
 public class NoteBookController {
 
     private final NoteBookService noteBookService;
 
     @PostMapping
     public ResponseEntity<Void> createNoteBook(
-           @Valid @RequestBody NoteBookDto noteBookDto
+           @Valid @RequestBody NoteBookDto noteBookDto,
+           User user
     ){
-        return null;
+
+        noteBookService.create(noteBookDto,user);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/api/notebook/{notebookId}")
-    public ResponseEntity<NoteBookDto> updateNoteBook(
+    @PutMapping("/{notebookId}")
+    public ResponseEntity<Void> updateNoteBook(
             @Valid @RequestBody NoteBookDto noteBookDto,
             @PathVariable Long notebookId,
-            Authentication authentication
+            User user
     ){
-        return null;
+        noteBookService.upsert(notebookId,noteBookDto, user);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/api/notebook")
-    public ResponseEntity<List<NoteBookDto>> getNoteBookList(
-        Authentication authentication
+    @GetMapping
+    public ResponseEntity<List<NoteBookResponse>> getNoteBookList(
+        User user
     ){
-        User user = (User) authentication.getPrincipal();
-        return null;
+        return new ResponseEntity<>(noteBookService.getNoteBookList(user), HttpStatus.OK);
     }
 
-    @GetMapping("/api/notebook/{notebookId}")
-    public ResponseEntity<List<NoteDto>> getNoteBook(
-            @PathVariable Long notebookId,
-            Authentication authentication
-    ){
-        return null;
-    }
-
-    @DeleteMapping("/api/notebook/{notebookId}")
+    @DeleteMapping("/{notebookId}")
     public ResponseEntity<Void> deleteNoteBook(
             @PathVariable Long notebookId,
-            Authentication authentication
+            User user
     ){
-        return null;
+        noteBookService.delete(notebookId, user);
+        return ResponseEntity.ok().build();
+    }
+
+    //TODO
+    @GetMapping("/{notebookId}")
+    public ResponseEntity<List<NoteDto>> getNoteBook(
+            @PathVariable Long notebookId
+    ){
+        return new ResponseEntity<>(noteBookService.getNoteBook(notebookId), HttpStatus.OK);
     }
 }

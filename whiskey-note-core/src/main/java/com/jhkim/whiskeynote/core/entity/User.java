@@ -14,7 +14,7 @@ import java.util.Collections;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @Builder
 @Table(name = "user")
 @Entity
@@ -41,7 +41,6 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isAccountNonExpired() {
         return false;
     }
-
     @Override
     public boolean isAccountNonLocked() {
         return false;

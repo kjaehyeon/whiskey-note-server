@@ -13,11 +13,3 @@ public class ApiApplication {
         SpringApplication.run(ApiApplication.class, args);
     }
 }
-
-/**
- *
- * antpatterns는 좀더 찾아보기
- * 테스트 코드 작성 마무리하자
- * 권한 없을 때 GeneralException 아니고 그냥 403던짐
- *
- */

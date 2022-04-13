@@ -1,6 +1,7 @@
 package com.jhkim.whiskeynote.api.dto;
 
 import com.jhkim.whiskeynote.core.entity.NoteBook;
+import com.jhkim.whiskeynote.core.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,13 +20,22 @@ public class NoteBookDto {
     private Integer green;
     private Integer blue;
 
-    public NoteBook toEntity(){
+    public NoteBook toEntity(User user){
         return NoteBook.of(
                 title,
-                null,
+                user,
                 red,
                 green,
                 blue
         );
+    }
+
+    public NoteBook updateEntity(NoteBook noteBook){
+        if(title != null) noteBook.setTitle(title);
+        if(red != null) noteBook.setRed(red);
+        if(green != null) noteBook.setGreen(green);
+        if(blue != null) noteBook.setBlue(blue);
+
+        return noteBook;
     }
 }
