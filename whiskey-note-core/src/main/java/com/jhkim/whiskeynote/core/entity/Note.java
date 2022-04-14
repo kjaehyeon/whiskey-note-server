@@ -18,24 +18,29 @@ public class Note extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "note_book_id")
+    @Column(nullable = false)
     private NoteBook notebook;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "whiskey_id")
+    @Column(nullable = true)
     private Whiskey whiskey;
 
+    @Column(nullable = false)
     private String whiskey_name;
+    @Column(nullable = false)
+    private Float rating;
+
     private String distiller;
     private Integer price;
-    private Float rating;
     private Integer age;
 
     private String nose;
     private String taste;
     private String finish;
-
     @Lob
-    private String review;
+    @Column(nullable = false)
+    private String description;
 
     @Enumerated(value = EnumType.STRING)
     private WhiskeyColor color;
