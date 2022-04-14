@@ -2,10 +2,7 @@ package com.jhkim.whiskeynote.core.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -17,7 +14,7 @@ import javax.persistence.Table;
 public class NoteBook extends BaseEntity{
     private String title;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "writer_id")
     private User writer;
 

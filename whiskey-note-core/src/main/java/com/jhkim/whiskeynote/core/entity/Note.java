@@ -16,14 +16,12 @@ import javax.persistence.*;
 @Entity
 public class Note extends BaseEntity{
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "note_book_id")
-    @Column(nullable = false)
     private NoteBook notebook;
 
     @ManyToOne
     @JoinColumn(name = "whiskey_id")
-    @Column(nullable = true)
     private Whiskey whiskey;
 
     @Column(nullable = false)

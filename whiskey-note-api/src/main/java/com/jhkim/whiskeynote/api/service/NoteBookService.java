@@ -1,8 +1,8 @@
 package com.jhkim.whiskeynote.api.service;
 
-import com.jhkim.whiskeynote.api.dto.NoteBookDto;
-import com.jhkim.whiskeynote.api.dto.NoteBookResponse;
-import com.jhkim.whiskeynote.api.dto.NoteDto;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
+import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
@@ -74,7 +74,7 @@ public class NoteBookService {
 
     //TODO
     @Transactional
-    public List<NoteDto> getNoteBook(
+    public List<NoteCreateRequest> getNoteBook(
             Long notebook_id
     ){
         return null;

@@ -1,12 +1,11 @@
 package com.jhkim.whiskeynote.api.controller;
 
-import com.jhkim.whiskeynote.api.dto.LogInRequest;
-import com.jhkim.whiskeynote.api.dto.LoginResponse;
-import com.jhkim.whiskeynote.api.dto.SignUpRequest;
+import com.jhkim.whiskeynote.api.dto.auth.LogInRequest;
+import com.jhkim.whiskeynote.api.dto.auth.LoginResponse;
+import com.jhkim.whiskeynote.api.dto.auth.SignUpRequest;
 import com.jhkim.whiskeynote.api.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

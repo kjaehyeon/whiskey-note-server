@@ -1,8 +1,8 @@
 package com.jhkim.whiskeynote.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jhkim.whiskeynote.api.dto.LogInRequest;
-import com.jhkim.whiskeynote.api.dto.SignUpRequest;
+import com.jhkim.whiskeynote.api.dto.auth.LogInRequest;
+import com.jhkim.whiskeynote.api.dto.auth.SignUpRequest;
 import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.repository.UserRepository;

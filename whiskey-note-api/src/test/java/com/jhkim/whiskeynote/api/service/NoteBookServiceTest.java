@@ -1,8 +1,8 @@
 package com.jhkim.whiskeynote.api.service;
 
-import com.jhkim.whiskeynote.api.dto.NoteBookDto;
-import com.jhkim.whiskeynote.api.dto.NoteBookResponse;
-import com.jhkim.whiskeynote.api.dto.NoteDto;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
+import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
@@ -231,13 +231,13 @@ class NoteBookServiceTest {
                 )
         );
         //When
-        List<NoteDto> noteDtoList = sut.getNoteBook(notebook_id);
+        List<NoteCreateRequest> noteDtoList = sut.getNoteBook(notebook_id);
         //Then
         then(noteRepository).should().findAllByNotebook(noteBook);
         assertThat(noteDtoList)
                 .hasSize(3);
         assertThat(noteDtoList.get(0))
-                .isInstanceOf(NoteDto.class);
+                .isInstanceOf(NoteCreateRequest.class);
     }
     //존재하지 않는 노트북 단일 조회시 예외 반환
     @DisplayName("[NOTEBOOK[GET] 단일 노트북 조회 - 존재하지 않는 노트북 조회시 예외반환")
@@ -262,7 +262,7 @@ class NoteBookServiceTest {
                 noteBook,
                 null,
                 "wild turkey"
-                ,null,1,1F,1,null,null,null,null,null,1,
+                ,1F,null,1,1,null,null,null,null,null,1,
                 1,1,1,1,1,1,1,1,1,1,1
         );
     }

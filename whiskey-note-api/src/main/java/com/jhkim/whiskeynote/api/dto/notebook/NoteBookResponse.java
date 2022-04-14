@@ -1,4 +1,4 @@
-package com.jhkim.whiskeynote.api.dto;
+package com.jhkim.whiskeynote.api.dto.notebook;
 
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import lombok.AllArgsConstructor;

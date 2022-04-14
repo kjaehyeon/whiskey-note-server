@@ -5,12 +5,12 @@ import lombok.Getter;
 import javax.persistence.*;
 
 @Getter
-@Table(name = "whiskey_image")
+@Table(name = "note_image")
 @Entity
-public class WhiskeyImage extends BaseEntity{
+public class NoteImage extends BaseEntity{
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "whiskey_id")
-    private Whiskey whiskey;
+    private Note note;
 
     @Column(nullable = false)
     private String url;

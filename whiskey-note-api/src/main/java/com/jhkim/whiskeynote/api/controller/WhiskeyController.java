@@ -1,6 +1,6 @@
 package com.jhkim.whiskeynote.api.controller;
 
-import com.jhkim.whiskeynote.api.dto.WhiskeyCreateRequest;
+import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

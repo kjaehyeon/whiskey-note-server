@@ -1,8 +1,8 @@
 package com.jhkim.whiskeynote.api.service;
 
-import com.jhkim.whiskeynote.api.dto.LogInRequest;
-import com.jhkim.whiskeynote.api.dto.LoginResponse;
-import com.jhkim.whiskeynote.api.dto.SignUpRequest;
+import com.jhkim.whiskeynote.api.dto.auth.LogInRequest;
+import com.jhkim.whiskeynote.api.dto.auth.LoginResponse;
+import com.jhkim.whiskeynote.api.dto.auth.SignUpRequest;
 import com.jhkim.whiskeynote.api.jwt.JwtUtils;
 import com.jhkim.whiskeynote.core.dto.UserCreateRequest;
 import com.jhkim.whiskeynote.core.entity.User;

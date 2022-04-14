@@ -1,16 +1,14 @@
 package com.jhkim.whiskeynote.api.controller;
 
-import com.jhkim.whiskeynote.api.dto.NoteBookDto;
-import com.jhkim.whiskeynote.api.dto.NoteBookResponse;
-import com.jhkim.whiskeynote.api.dto.NoteDto;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
+import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.api.service.NoteBookService;
 import com.jhkim.whiskeynote.core.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -63,7 +61,7 @@ public class NoteBookController {
 
     //TODO
     @GetMapping("/{notebookId}")
-    public ResponseEntity<List<NoteDto>> getNoteBook(
+    public ResponseEntity<List<NoteCreateRequest>> getNoteBook(
             @PathVariable Long notebookId
     ){
         return new ResponseEntity<>(noteBookService.getNoteBook(notebookId), HttpStatus.OK);

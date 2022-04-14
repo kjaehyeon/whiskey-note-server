@@ -1,4 +1,4 @@
-package com.jhkim.whiskeynote.api.dto;
+package com.jhkim.whiskeynote.api.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
