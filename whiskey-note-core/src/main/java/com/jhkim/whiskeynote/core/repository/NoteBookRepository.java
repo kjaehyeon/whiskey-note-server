@@ -13,7 +13,6 @@ import java.util.Optional;
 public interface NoteBookRepository extends JpaRepository<NoteBook, Long> {
     //각 노트북의 페이지 수도 같이 찾기
     List<NoteBook> findNoteBookByWriter(User writer);
-
     Optional<NoteBook> findNoteBookById(Long id);
     Optional<NoteBook> findNoteBookByTitleAndWriter(String title, User user);
 

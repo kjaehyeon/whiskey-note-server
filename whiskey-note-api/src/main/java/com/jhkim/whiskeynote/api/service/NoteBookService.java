@@ -3,8 +3,6 @@ package com.jhkim.whiskeynote.api.service;
 import com.jhkim.whiskeynote.api.dto.NoteBookDto;
 import com.jhkim.whiskeynote.api.dto.NoteBookResponse;
 import com.jhkim.whiskeynote.api.dto.NoteDto;
-import com.jhkim.whiskeynote.api.jwt.JwtUtils;
-import com.jhkim.whiskeynote.core.constant.WhiskeyColor;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,16 +37,16 @@ public class NoteBookService {
             NoteBookDto noteBookDto,
             User user
     ){
-
+        //변경하려는 이름이 중복되는지 확인
         notebookDuplicationCheck(noteBookDto, user);
-        noteBookRepository.findNoteBookById(notebook_id)
-                .ifPresent(e ->{
-                    //수정하려는 유저가 작성자가 아니면 FORBIDDEN
-                   if(!e.getWriter().getUsername().equals(user.getUsername())){
-                       throw new GeneralException(ErrorCode.FORBIDDEN);
-                   }
-                   noteBookRepository.save(noteBookDto.updateEntity(e));
-                });
+
+        //변경할 노트북이 존재하는지 확인
+        NoteBook noteBook = noteBookRepository.findNoteBookById(notebook_id)
+                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        notebookWriterCheck(noteBook, user);
+
+        noteBookRepository.save(noteBookDto.updateEntity(noteBook));
     }
 
     @Transactional
@@ -57,14 +54,10 @@ public class NoteBookService {
             Long notebook_id,
             User user
     ){
-        log.info("================in delete");
-
-       final NoteBook noteBook =  noteBookRepository.findNoteBookById(notebook_id)
+       final NoteBook noteBook = noteBookRepository.findNoteBookById(notebook_id)
                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
 
-       if(!noteBook.getWriter().getUsername().equals(user.getUsername())){
-           throw new GeneralException(ErrorCode.FORBIDDEN);
-       }
+       notebookWriterCheck(noteBook, user);
 
        noteBookRepository.delete(noteBook);
     }
@@ -87,10 +80,18 @@ public class NoteBookService {
         return null;
     }
 
+    //변경하려는 노트북의 이름이 중복되었는지 확인
     private void notebookDuplicationCheck(NoteBookDto noteBookDto, User user){
         noteBookRepository.findNoteBookByTitleAndWriter(noteBookDto.getTitle(), user)
                 .ifPresent(e -> {
                     throw new GeneralException(ErrorCode.RESOURCE_ALREADY_EXISTS);
                 });
+    }
+
+    private void notebookWriterCheck(NoteBook noteBook, User user){
+        //삭제하려는 유저가 작성자가 아니면 FORBIDDEN
+        if(!noteBook.getWriter().getUsername().equals(user.getUsername())){
+            throw new GeneralException(ErrorCode.FORBIDDEN);
+        }
     }
 }

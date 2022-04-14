@@ -41,6 +41,7 @@ public class NoteBookController {
             User user
     ){
         noteBookService.upsert(notebookId,noteBookDto, user);
+
         return ResponseEntity.ok().build();
     }
 
