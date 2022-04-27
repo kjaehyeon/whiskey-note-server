@@ -1,5 +1,6 @@
 package com.jhkim.whiskeynote.api.service;
 
+import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
 import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
@@ -74,7 +75,7 @@ public class NoteBookService {
 
     //TODO
     @Transactional
-    public List<NoteCreateRequest> getNoteBook(
+    public List<NoteDetailResponse> getNoteBook(
             Long notebook_id
     ){
         return null;

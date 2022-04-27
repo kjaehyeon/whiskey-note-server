@@ -1,5 +1,6 @@
 package com.jhkim.whiskeynote.api.controller;
 
+import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
 import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
@@ -61,7 +62,7 @@ public class NoteBookController {
 
     //TODO
     @GetMapping("/{notebookId}")
-    public ResponseEntity<List<NoteCreateRequest>> getNoteBook(
+    public ResponseEntity<List<NoteDetailResponse>> getNoteBook(
             @PathVariable Long notebookId
     ){
         return new ResponseEntity<>(noteBookService.getNoteBook(notebookId), HttpStatus.OK);
