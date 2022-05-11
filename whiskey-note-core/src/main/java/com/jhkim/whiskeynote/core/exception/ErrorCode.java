@@ -14,9 +14,12 @@ public enum ErrorCode {
     VALIDATION_ERROR(10001, HttpStatus.BAD_REQUEST, "Validation error"),
     RESOURCE_NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found"),
     RESOURCE_ALREADY_EXISTS(10003, HttpStatus.CONFLICT, "Requested resource is already exists"),
+    FILE_UPLOAD_SIZE_EXCEEDED(10004, HttpStatus.BAD_REQUEST, "File upload size exceeded"),
+    INVALID_FILE_FORMAT(10005, HttpStatus.BAD_REQUEST, "Invalid file format"),
 
     //General Server Error
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
+    FILE_UPLOAD_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "File upload error"),
 
     //Auth Error
     USER_ALREADY_EXISTS(30000, HttpStatus.CONFLICT, "User Already Exists"),

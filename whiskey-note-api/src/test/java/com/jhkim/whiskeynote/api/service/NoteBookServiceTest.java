@@ -1,5 +1,6 @@
 package com.jhkim.whiskeynote.api.service;
 
+import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
 import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
@@ -54,12 +55,13 @@ class NoteBookServiceTest {
         User user = createUser("user1");
         NoteBook noteBook = noteBookDto.toEntity(user);
         given(noteBookRepository.findNoteBookByTitleAndWriter("notebook 1", user)).willReturn(Optional.empty());
-        given(noteBookRepository.save(any())).willReturn(noteBook);
+        given(noteBookRepository.save(noteBook)).willReturn(noteBook);
+
         //When
         sut.create(noteBookDto, user);
 
         //Then
-        then(noteBookRepository).should().save(any());
+        then(noteBookRepository).should().save(noteBook);
     }
 
     //노트북 생성시 이름 중복 되면 예외반환하기
@@ -139,7 +141,7 @@ class NoteBookServiceTest {
                 .willReturn(Optional.of(originalNotebook));
         given(noteBookRepository.findNoteBookByTitleAndWriter(newNotebook.getTitle(), user))
                 .willReturn(Optional.empty());
-        given(noteBookRepository.save(any())).willReturn(newNotebook);
+        given(noteBookRepository.save(newNotebook)).willReturn(newNotebook);
 
         //When
         sut.upsert(notebook_id, noteBookDto, user);
@@ -147,7 +149,7 @@ class NoteBookServiceTest {
         //Then
         then(noteBookRepository).should().findNoteBookById(notebook_id);
         then(noteBookRepository).should().findNoteBookByTitleAndWriter(newNotebook.getTitle(), user);
-        then(noteBookRepository).should().save(any());
+        then(noteBookRepository).should().save(newNotebook);
     }
 
     //존재하지 않는 노트북 수정시 예외반환
@@ -231,13 +233,13 @@ class NoteBookServiceTest {
                 )
         );
         //When
-        List<NoteCreateRequest> noteDtoList = sut.getNoteBook(notebook_id);
+        List<NoteDetailResponse> noteDtoList = sut.getNoteBook(notebook_id);
         //Then
         then(noteRepository).should().findAllByNotebook(noteBook);
         assertThat(noteDtoList)
                 .hasSize(3);
         assertThat(noteDtoList.get(0))
-                .isInstanceOf(NoteCreateRequest.class);
+                .isInstanceOf(NoteDetailResponse.class);
     }
     //존재하지 않는 노트북 단일 조회시 예외 반환
     @DisplayName("[NOTEBOOK[GET] 단일 노트북 조회 - 존재하지 않는 노트북 조회시 예외반환")

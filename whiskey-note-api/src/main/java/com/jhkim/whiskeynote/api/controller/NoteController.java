@@ -40,7 +40,6 @@ public class NoteController {
             @PathVariable Long noteId,
             User user
     ){
-
         return new ResponseEntity<>(
                 noteService.getNote(noteId, user),
                 HttpStatus.OK

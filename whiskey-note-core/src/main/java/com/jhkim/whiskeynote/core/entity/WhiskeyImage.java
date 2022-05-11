@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Getter
 @Table(name = "whiskey_image")
 @Entity
-public class WhiskeyImage extends BaseEntity{
+public class WhiskeyImage extends BaseEntity {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "whiskey_id")
     private Whiskey whiskey;

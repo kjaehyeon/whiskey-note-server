@@ -1,5 +1,6 @@
 package com.jhkim.whiskeynote.api.dto.note;
 
+import com.jhkim.whiskeynote.core.entity.Note;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,4 +48,9 @@ public class NoteCreateRequest {
     private Integer salty;
 
     private List<MultipartFile> images;
+
+    public Note toEntity(NoteCreateRequest noteCreateRequest){
+        return Note.builder()
+                .build();
+    }
 }

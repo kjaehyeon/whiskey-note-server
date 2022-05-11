@@ -41,6 +41,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final BooleanPath enabled = createBoolean("enabled");
 
+    public final StringPath iconUrl = createString("iconUrl");
+
     //inherited
     public final NumberPath<Long> id = _super.id;
 

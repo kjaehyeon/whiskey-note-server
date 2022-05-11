@@ -9,8 +9,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @Builder
-@Table(name = "note_book")
+@Table(name = "notebook")
 @Entity
+@EqualsAndHashCode(callSuper = false)
 public class NoteBook extends BaseEntity{
     private String title;
 

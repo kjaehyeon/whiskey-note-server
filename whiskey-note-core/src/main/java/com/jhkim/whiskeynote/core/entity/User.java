@@ -23,6 +23,7 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
     private String email;
     private String authority;
+    private String iconUrl;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
