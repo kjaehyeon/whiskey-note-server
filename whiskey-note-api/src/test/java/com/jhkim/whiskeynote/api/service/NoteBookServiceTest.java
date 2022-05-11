@@ -141,6 +141,7 @@ class NoteBookServiceTest {
                 .willReturn(Optional.of(originalNotebook));
         given(noteBookRepository.findNoteBookByTitleAndWriter(newNotebook.getTitle(), user))
                 .willReturn(Optional.empty());
+
         given(noteBookRepository.save(newNotebook)).willReturn(newNotebook);
 
         //When
@@ -269,7 +270,7 @@ class NoteBookServiceTest {
         );
     }
     private User createUser(String username){
-        return User.of(username ,"password1","user1@email.com","ROLE_USER");
+        return User.of(username ,"password1","user1@email.com","ROLE_USER", null);
     }
     private NoteBook createNoteBook(String title, User user){
         return NoteBook.of(title, user, 1,1,1);
