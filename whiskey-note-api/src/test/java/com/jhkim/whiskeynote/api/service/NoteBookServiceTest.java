@@ -3,7 +3,6 @@ package com.jhkim.whiskeynote.api.service;
 import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
-import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
@@ -58,7 +57,7 @@ class NoteBookServiceTest {
         given(noteBookRepository.save(noteBook)).willReturn(noteBook);
 
         //When
-        sut.create(noteBookDto, user);
+        sut.createNoteBook(noteBookDto, user);
 
         //Then
         then(noteBookRepository).should().save(noteBook);
@@ -75,7 +74,7 @@ class NoteBookServiceTest {
                 .willReturn(Optional.of(noteBookDto.toEntity(user)));
         //When
 
-        Throwable throwable = catchThrowable(() -> sut.create(noteBookDto, user));
+        Throwable throwable = catchThrowable(() -> sut.createNoteBook(noteBookDto, user));
         //Then
         then(noteBookRepository).should().findNoteBookByTitleAndWriter(noteBookDto.getTitle(), user);
         assertThat(throwable)
@@ -102,7 +101,7 @@ class NoteBookServiceTest {
                         Optional.of(noteBook)
                 );
         //When
-        sut.delete(1L, user);
+        sut.deleteNoteBook(1L, user);
         //Then
         then(noteBookRepository).should().delete(noteBook);
     }
@@ -117,7 +116,7 @@ class NoteBookServiceTest {
         given(noteBookRepository.findNoteBookById(notebookId))
                 .willReturn(Optional.empty());
         //When
-        Throwable throwable = catchThrowable(() -> sut.delete(notebookId, user));
+        Throwable throwable = catchThrowable(() -> sut.deleteNoteBook(notebookId, user));
 
         //Then
         assertThat(throwable).isInstanceOf(GeneralException.class);
@@ -145,7 +144,7 @@ class NoteBookServiceTest {
         given(noteBookRepository.save(newNotebook)).willReturn(newNotebook);
 
         //When
-        sut.upsert(notebook_id, noteBookDto, user);
+        sut.updateNoteBook(notebook_id, noteBookDto, user);
 
         //Then
         then(noteBookRepository).should().findNoteBookById(notebook_id);
@@ -166,7 +165,7 @@ class NoteBookServiceTest {
                 .willReturn(Optional.empty());
 
         //When
-        Throwable throwable = catchThrowable(() -> sut.upsert(notExistNotebookId, notExistNotebookDto, user));
+        Throwable throwable = catchThrowable(() -> sut.updateNoteBook(notExistNotebookId, notExistNotebookDto, user));
 
         //Then
         assertThat(throwable).isInstanceOf(GeneralException.class);
@@ -189,7 +188,7 @@ class NoteBookServiceTest {
                 ));
 
         //When
-        Throwable throwable = catchThrowable(() -> sut.upsert(notebook_id, duplicated_notebookDto, user));
+        Throwable throwable = catchThrowable(() -> sut.updateNoteBook(notebook_id, duplicated_notebookDto, user));
 
         //Then
         assertThat(throwable).isInstanceOf(GeneralException.class);
@@ -213,7 +212,7 @@ class NoteBookServiceTest {
                 )
         );
         //When
-        List<NoteBookResponse> list = sut.getNoteBookList(user);
+        List<NoteBookResponse> list = sut.getNoteBooks(user);
         //Then
         assertThat(list).hasSize(3);
     }

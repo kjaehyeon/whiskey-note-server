@@ -3,10 +3,7 @@ package com.jhkim.whiskeynote.core.entity;
 import com.jhkim.whiskeynote.core.constant.Bool3;
 import com.jhkim.whiskeynote.core.constant.WhiskeyCategory;
 import com.jhkim.whiskeynote.core.constant.WhiskeyDistrict;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,6 +13,7 @@ import javax.persistence.*;
 @Builder
 @Table(name = "whiskey")
 @Entity
+@EqualsAndHashCode(callSuper = false)
 public class Whiskey extends BaseEntity{
 
     private String brand;

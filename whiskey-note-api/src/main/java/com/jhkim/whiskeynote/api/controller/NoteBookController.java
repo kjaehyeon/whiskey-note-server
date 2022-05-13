@@ -3,7 +3,6 @@ package com.jhkim.whiskeynote.api.controller;
 import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
-import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.api.service.NoteBookService;
 import com.jhkim.whiskeynote.core.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class NoteBookController {
            User user
     ){
 
-        noteBookService.create(noteBookDto,user);
+        noteBookService.createNoteBook(noteBookDto,user);
         return ResponseEntity.ok().build();
     }
 
@@ -39,16 +38,16 @@ public class NoteBookController {
             @PathVariable Long notebookId,
             User user
     ){
-        noteBookService.upsert(notebookId,noteBookDto, user);
+        noteBookService.updateNoteBook(notebookId,noteBookDto, user);
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<NoteBookResponse>> getNoteBookList(
+    public ResponseEntity<List<NoteBookResponse>> getNoteBooks(
         User user
     ){
-        return new ResponseEntity<>(noteBookService.getNoteBookList(user), HttpStatus.OK);
+        return new ResponseEntity<>(noteBookService.getNoteBooks(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/{notebookId}")
@@ -56,7 +55,7 @@ public class NoteBookController {
             @PathVariable Long notebookId,
             User user
     ){
-        noteBookService.delete(notebookId, user);
+        noteBookService.deleteNoteBook(notebookId, user);
         return ResponseEntity.ok().build();
     }
 

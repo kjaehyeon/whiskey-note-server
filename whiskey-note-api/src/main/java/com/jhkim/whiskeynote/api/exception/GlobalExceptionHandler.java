@@ -1,5 +1,7 @@
 package com.jhkim.whiskeynote.api.exception;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import lombok.Data;
@@ -35,6 +37,17 @@ public class GlobalExceptionHandler {
             MaxUploadSizeExceededException ex
     ){
         return makeErrorResponse(ErrorCode.FILE_UPLOAD_SIZE_EXCEEDED);
+    }
+
+    //AWS S3 Error
+    @ExceptionHandler(value = {
+            SdkClientException.class,
+            AmazonServiceException.class
+    })
+    public ResponseEntity<ErrorResponse> handle(
+            Exception ex
+    ){
+        return makeErrorResponse(ErrorCode.AWS_S3_ERROR);
     }
 
     @ExceptionHandler(Exception.class) // 나머지 모든 예외를 처리하는 핸들러

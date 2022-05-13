@@ -1,6 +1,8 @@
 package com.jhkim.whiskeynote.api.dto.note;
 
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
+import com.jhkim.whiskeynote.core.entity.Note;
+import com.jhkim.whiskeynote.core.entity.NoteImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -50,4 +53,11 @@ public class NoteDetailResponse {
     private Integer salty;
 
     private List<String> image_urls;
+
+    public static NoteDetailResponse fromEntity(Note note, List<String> imageUrls){
+
+        return NoteDetailResponse.builder()
+                .image_urls(imageUrls)
+                .build();
+    }
 }

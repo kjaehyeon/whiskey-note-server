@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,20 +19,20 @@ public class NoteController {
     private final NoteService noteService;
 
     @PostMapping
-    public ResponseEntity<Void> create(
+    public ResponseEntity<Void> createNote(
             @Valid @ModelAttribute NoteCreateRequest noteCreateRequest,
             User user
     ){
-        noteService.create(noteCreateRequest, user);
+        noteService.createNote(noteCreateRequest, user);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{noteId}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<Void> deleteNote(
             @PathVariable Long noteId,
             User user
     ){
-        noteService.delete(noteId, user);
+        noteService.deleteNote(noteId, user);
         return ResponseEntity.ok().build();
     }
 
@@ -45,6 +46,17 @@ public class NoteController {
                 HttpStatus.OK
         );
     }
+    @GetMapping
+    public ResponseEntity<List<NoteDetailResponse>> getNotes(
+            @RequestParam("notebook") Long notebookId,
+            User user
+    ){
+
+        return new ResponseEntity<>(
+                noteService.getNotes(notebookId, user),
+                HttpStatus.OK
+        );
+    }
 
     @PutMapping("/{noteId}")
     public ResponseEntity<NoteDetailResponse> updateNote(
@@ -52,9 +64,9 @@ public class NoteController {
             @Valid @ModelAttribute NoteCreateRequest noteCreateRequest,
             User user
     ){
-        noteService.upsert(noteId, noteCreateRequest, user);
+        noteService.updateNote(noteId, noteCreateRequest, user);
         return new ResponseEntity<>(
-                noteService.upsert(noteId, noteCreateRequest, user),
+                noteService.updateNote(noteId, noteCreateRequest, user),
                 HttpStatus.OK
         );
     }

@@ -9,7 +9,6 @@ import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,24 +20,23 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@PropertySource("classpath:application-s3.properties")
 public class AwsS3Service {
 
-    @Value("cloud.aws.credentials.access-key")
-    private final String bucket;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
     private final AmazonS3Client amazonS3Client;
-    private final String[] allowedExtensions = {".jpg", ".jpeg", ".png", ".bmp"};
+    private final String[] ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp"};
 
-    public List<String> uploadFileList(
+    public List<String> uploadImages(
             List<MultipartFile> multipartFiles,
             String folderName
     ){
         List<String> urlList = new ArrayList<>();
-        multipartFiles.forEach(file -> urlList.add(uploadFile(file, folderName)));
+        multipartFiles.forEach(file -> urlList.add(uploadImage(file, folderName)));
         return urlList;
     }
 
-    public String uploadFile(
+    public String uploadImage(
             MultipartFile file,
             String folderName
     ){
@@ -65,14 +63,14 @@ public class AwsS3Service {
         return amazonS3Client.getUrl(path, fileName).toString();
     }
 
-    public void deleteFile(
+    public void deleteImage(
             String url
     ){
-        String[] splittedUrl = url.split("/");
+        String[] splitUrl = url.split("/");
         amazonS3Client.deleteObject(
                 new DeleteObjectRequest(
-                    bucket+"/"+splittedUrl[splittedUrl.length-2],
-                        splittedUrl[splittedUrl.length-1]
+                    bucket+"/"+splitUrl[splitUrl.length-2],
+                        splitUrl[splitUrl.length-1]
                 )
         );
     }
@@ -87,8 +85,8 @@ public class AwsS3Service {
     ) {
         //only png, jpg, jpeg, bmp
         try {
-            final String extension = fileName.substring(fileName.lastIndexOf("."));
-            for(String allowedExtension : allowedExtensions){
+            final String extension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+            for(String allowedExtension : ALLOWED_EXTENSIONS){
                 if(allowedExtension.equals(extension)) return extension;
             }
             throw new GeneralException(ErrorCode.INVALID_FILE_FORMAT);

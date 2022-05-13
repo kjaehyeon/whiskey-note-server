@@ -1,19 +1,18 @@
 package com.jhkim.whiskeynote.core.entity;
 
 import com.jhkim.whiskeynote.core.constant.WhiskeyColor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @Builder
 @Table(name = "note")
 @Entity
+@EqualsAndHashCode(callSuper = false)
 public class Note extends BaseEntity{
 
     @ManyToOne(cascade = CascadeType.REMOVE)
