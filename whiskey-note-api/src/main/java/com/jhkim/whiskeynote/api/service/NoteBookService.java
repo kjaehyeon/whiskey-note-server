@@ -1,8 +1,8 @@
 package com.jhkim.whiskeynote.api.service;
 
 import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
-import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
-import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
@@ -24,7 +24,7 @@ public class NoteBookService {
 
     @Transactional
     public void createNoteBook(
-            NoteBookDto noteBookDto,
+            NoteBookCreateRequest noteBookDto,
             User user
     ){
         checkNotebookDuplication(noteBookDto, user);
@@ -34,7 +34,7 @@ public class NoteBookService {
     @Transactional
     public void updateNoteBook(
             Long notebook_id,
-            NoteBookDto noteBookDto,
+            NoteBookCreateRequest noteBookDto,
             User user
     ){
         //변경하려는 이름이 중복되는지 확인
@@ -62,12 +62,12 @@ public class NoteBookService {
     }
 
     @Transactional
-    public List<NoteBookResponse> getNoteBooks(
+    public List<NoteBookDetailResponse> getNoteBooks(
             User user
     ){
         return noteBookRepository.findNoteBookByWriter(user)
                 .stream()
-                .map(NoteBookResponse::fromEntity)
+                .map(NoteBookDetailResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -80,7 +80,7 @@ public class NoteBookService {
     }
 
     //변경하려는 노트북의 이름이 중복되었는지 확인
-    private void checkNotebookDuplication(NoteBookDto noteBookDto, User user){
+    private void checkNotebookDuplication(NoteBookCreateRequest noteBookDto, User user){
         noteBookRepository.findNoteBookByTitleAndWriter(noteBookDto.getTitle(), user)
                 .ifPresent(e -> {
                     throw new GeneralException(ErrorCode.RESOURCE_ALREADY_EXISTS);

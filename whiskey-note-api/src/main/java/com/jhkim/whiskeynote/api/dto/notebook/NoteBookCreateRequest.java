@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 @AllArgsConstructor(staticName = "of")
-public class NoteBookDto {
+public class NoteBookCreateRequest {
     @NotBlank
     private String title;
 

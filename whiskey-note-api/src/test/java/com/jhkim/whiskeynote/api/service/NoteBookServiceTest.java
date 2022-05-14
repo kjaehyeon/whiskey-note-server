@@ -1,8 +1,8 @@
 package com.jhkim.whiskeynote.api.service;
 
 import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
-import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
-import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
@@ -35,9 +35,9 @@ class NoteBookServiceTest {
     @Mock private NoteBookRepository noteBookRepository;
     @Mock private NoteRepository noteRepository;
 
-    private NoteBookDto createNormalNoteBookDto(String title){
+    private NoteBookCreateRequest createNormalNoteBookDto(String title){
         Random random = new Random();
-        return NoteBookDto.of(
+        return NoteBookCreateRequest.of(
                 title,
                 random.nextInt(255),
                 random.nextInt(255),
@@ -50,7 +50,7 @@ class NoteBookServiceTest {
     @Test
     void givenNormalNoteBook_whenCreateNoteBook_thenReturnOK(){
         //Given
-        NoteBookDto noteBookDto = createNormalNoteBookDto("notebook 1");
+        NoteBookCreateRequest noteBookDto = createNormalNoteBookDto("notebook 1");
         User user = createUser("user1");
         NoteBook noteBook = noteBookDto.toEntity(user);
         given(noteBookRepository.findNoteBookByTitleAndWriter("notebook 1", user)).willReturn(Optional.empty());
@@ -68,7 +68,7 @@ class NoteBookServiceTest {
     @Test
     void givenDuplicatedNoteBook_whenCreateNoteBook_ThenReturnException(){
         //Given
-        NoteBookDto noteBookDto = createNormalNoteBookDto("notebook1");
+        NoteBookCreateRequest noteBookDto = createNormalNoteBookDto("notebook1");
         User user = createUser("user1");
         given(noteBookRepository.findNoteBookByTitleAndWriter(noteBookDto.getTitle(), user))
                 .willReturn(Optional.of(noteBookDto.toEntity(user)));
@@ -131,7 +131,7 @@ class NoteBookServiceTest {
         //Given
         Long notebook_id = 1L;
         User user = createUser("user1");
-        NoteBookDto noteBookDto = NoteBookDto.of("new notebook1", 1, 1, 1);
+        NoteBookCreateRequest noteBookDto = NoteBookCreateRequest.of("new notebook1", 1, 1, 1);
 
         NoteBook originalNotebook = createNoteBook("notebook1", user);
         NoteBook newNotebook = noteBookDto.toEntity(user);
@@ -159,7 +159,7 @@ class NoteBookServiceTest {
         //Given
         Long notExistNotebookId = 1L;
         User user = createUser("user1");
-        NoteBookDto notExistNotebookDto = NoteBookDto.of("not exist notebook", 1, 1, 1);
+        NoteBookCreateRequest notExistNotebookDto = NoteBookCreateRequest.of("not exist notebook", 1, 1, 1);
 
         given(noteBookRepository.findNoteBookById(notExistNotebookId))
                 .willReturn(Optional.empty());
@@ -180,7 +180,7 @@ class NoteBookServiceTest {
         //Given
         Long notebook_id = 1L;
         User user = createUser("user1");
-        NoteBookDto duplicated_notebookDto = NoteBookDto.of("duplicated title", 1, 1, 1);
+        NoteBookCreateRequest duplicated_notebookDto = NoteBookCreateRequest.of("duplicated title", 1, 1, 1);
 
         given(noteBookRepository.findNoteBookByTitleAndWriter(duplicated_notebookDto.getTitle(), user))
                 .willReturn(Optional.of(
@@ -212,7 +212,7 @@ class NoteBookServiceTest {
                 )
         );
         //When
-        List<NoteBookResponse> list = sut.getNoteBooks(user);
+        List<NoteBookDetailResponse> list = sut.getNoteBooks(user);
         //Then
         assertThat(list).hasSize(3);
     }

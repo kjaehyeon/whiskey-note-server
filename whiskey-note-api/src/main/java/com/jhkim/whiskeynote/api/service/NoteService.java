@@ -12,6 +12,7 @@ import com.jhkim.whiskeynote.core.repository.NoteRepository;
 import com.jhkim.whiskeynote.core.repository.WhiskeyRepository;
 import com.jhkim.whiskeynote.core.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NoteService {
     private final NoteRepository noteRepository;
     private final NoteBookRepository noteBookRepository;
@@ -36,14 +38,13 @@ public class NoteService {
         //받아온 url NoteImage 테이블에 저장
         //Note 엔티티도 만들어서 저장
 
-        final Whiskey whiskey = whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskey_id())
+        final Whiskey whiskey = whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskeyId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
-        final NoteBook noteBook = noteBookRepository.findNoteBookById(noteCreateRequest.getNotebook_id())
+        final NoteBook noteBook = noteBookRepository.findNoteBookById(noteCreateRequest.getNotebookId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
 
         final Note savedNote = noteRepository.save(
                 noteCreateRequest.toEntity(
-                        noteCreateRequest,
                         whiskey,
                         noteBook
                 ));
@@ -109,9 +110,9 @@ public class NoteService {
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
         checkNoteWriter(note, user);
 
-        final Whiskey whiskey = whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskey_id())
+        final Whiskey whiskey = whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskeyId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
-        final NoteBook noteBook = noteBookRepository.findNoteBookById(noteCreateRequest.getNotebook_id())
+        final NoteBook noteBook = noteBookRepository.findNoteBookById(noteCreateRequest.getNotebookId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
 
 
@@ -123,7 +124,7 @@ public class NoteService {
         }
 
         return NoteDetailResponse.fromEntity(
-                noteRepository.save(noteCreateRequest.updateEntity(note,whiskey,noteBook)),
+                noteRepository.save(noteCreateRequest.updateNoteEntity(note,whiskey,noteBook)),
                 awsS3Service.uploadImages(
                         noteCreateRequest.getImages(),
                         S3Path.NOTE_IMAGE.getFolderName()

@@ -2,6 +2,7 @@ package com.jhkim.whiskeynote.api.controller;
 
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyCreateRequest;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
+import com.jhkim.whiskeynote.api.service.WhiskeyService;
 import com.jhkim.whiskeynote.core.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,22 +15,23 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/api/whiskey")
 public class WhiskeyController {
+    private final WhiskeyService whiskeyService;
 
     @PostMapping
     public ResponseEntity<Void> createWhiskey(
-            @Valid @RequestBody WhiskeyCreateRequest whiskeyCreateRequest,
-            User user
+            @Valid @RequestBody WhiskeyCreateRequest whiskeyCreateRequest
     ){
+        whiskeyService.createWhiskey(whiskeyCreateRequest);
         return ResponseEntity.ok().build();
     }
-    @GetMapping("/{whiskeyId")
+
+    @GetMapping("/{whiskeyId}")
     public ResponseEntity<WhiskeyDetailResponse> getWhiskey(
             @PathVariable Long whiskeyId
     ){
         return new ResponseEntity<>(
-                null,
+                whiskeyService.getWhiskey(whiskeyId),
                 HttpStatus.OK
         );
     }
-
 }

@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Table(name = "notebook")
 @Entity
 @EqualsAndHashCode(callSuper = false)
+@ToString
 public class NoteBook extends BaseEntity{
     private String title;
 

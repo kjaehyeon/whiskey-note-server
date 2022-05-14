@@ -1,16 +1,15 @@
 package com.jhkim.whiskeynote.api.dto.note;
 
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
+import com.jhkim.whiskeynote.core.constant.WhiskeyColor;
 import com.jhkim.whiskeynote.core.entity.Note;
-import com.jhkim.whiskeynote.core.entity.NoteImage;
+import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -20,13 +19,14 @@ public class NoteDetailResponse {
     private Long id;
 
     @NotNull
-    private Long notebook_id;
+    private Long notebookId;
     private WhiskeyDetailResponse whiskey;
 
     @NotNull
-    private String whiskey_name;
+    private String whiskeyName;
     private String distiller;
     private Integer price;
+    private String color;
 
     @NotNull
     private Float rating;
@@ -37,7 +37,7 @@ public class NoteDetailResponse {
 
     @NotNull
     private String description;
-    private Integer whiskey_color;
+    private Integer whiskeyColor;
 
     private Integer smokey;
     private Integer peaty;
@@ -52,12 +52,39 @@ public class NoteDetailResponse {
     private Integer sweet;
     private Integer salty;
 
-    private List<String> image_urls;
+    private List<String> imageUrls;
 
-    public static NoteDetailResponse fromEntity(Note note, List<String> imageUrls){
+    public static NoteDetailResponse fromEntity(
+            Note note,
+            List<String> imageUrls
+    ){
 
         return NoteDetailResponse.builder()
-                .image_urls(imageUrls)
+                .whiskey(WhiskeyDetailResponse.fromEntity(note.getWhiskey()))
+                .notebookId(note.getNotebook().getId())
+                .whiskeyName(note.getWhiskeyName())
+                .distiller(note.getDistiller())
+                .price(note.getPrice())
+                .rating(note.getRating())
+                .age(note.getAge())
+                .nose(note.getNose())
+                .taste(note.getTaste())
+                .finish(note.getFinish())
+                .description(note.getDescription())
+                .color(note.getColor().getName_ko())
+                .smokey(note.getSmokey())
+                .peaty(note.getPeaty())
+                .herbal(note.getHerbal())
+                .briny(note.getBriny())
+                .vanilla(note.getVanilla())
+                .fruity(note.getFruity())
+                .floral(note.getFloral())
+                .woody(note.getWoody())
+                .rich(note.getRich())
+                .spicy(note.getSpicy())
+                .sweet(note.getSweet())
+                .salty(note.getSalty())
+                .imageUrls(imageUrls)
                 .build();
     }
 }

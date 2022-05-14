@@ -11,9 +11,9 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 @AllArgsConstructor(staticName = "of")
-public class NoteBookResponse {
+public class NoteBookDetailResponse {
     @NotNull
-    private Long notebook_id;
+    private Long notebookId;
 
     @NotBlank
     private String title;
@@ -24,9 +24,9 @@ public class NoteBookResponse {
 
     //private Integer page_num;
 
-    public static NoteBookResponse fromEntity(NoteBook noteBook){
-        return NoteBookResponse.builder()
-                .notebook_id(noteBook.getId())
+    public static NoteBookDetailResponse fromEntity(NoteBook noteBook){
+        return NoteBookDetailResponse.builder()
+                .notebookId(noteBook.getId())
                 .title(noteBook.getTitle())
                 .red(noteBook.getRed())
                 .green(noteBook.getGreen())

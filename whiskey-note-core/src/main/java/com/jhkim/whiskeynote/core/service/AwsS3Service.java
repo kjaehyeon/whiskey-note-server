@@ -27,6 +27,7 @@ public class AwsS3Service {
     private final AmazonS3Client amazonS3Client;
     private final String[] ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp"};
 
+    //파일이 null일때 실행되지 않도록 해야함
     public List<String> uploadImages(
             List<MultipartFile> multipartFiles,
             String folderName

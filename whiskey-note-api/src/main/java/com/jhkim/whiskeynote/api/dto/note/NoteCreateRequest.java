@@ -17,11 +17,11 @@ import java.util.List;
 @AllArgsConstructor(staticName = "of")
 public class NoteCreateRequest {
     @NotNull
-    private Long notebook_id;
-    private Long whiskey_id;
+    private Long notebookId;
+    private Long whiskeyId;
 
     @NotNull
-    private String whiskey_name;
+    private String whiskeyName;
     private String distiller;
     private Integer price;
     @NotNull
@@ -51,15 +51,13 @@ public class NoteCreateRequest {
     private List<MultipartFile> images;
 
     public Note toEntity(
-            NoteCreateRequest noteCreateRequest,
             Whiskey whiskey,
             NoteBook noteBook
     ){
-
         return Note.builder()
                 .whiskey(whiskey)
                 .notebook(noteBook)
-                .whiskey_name(whiskey_name)
+                .whiskeyName(whiskeyName)
                 .distiller(distiller)
                 .price(price)
                 .rating(rating)
@@ -84,14 +82,14 @@ public class NoteCreateRequest {
                 .build();
     }
 
-    public Note updateEntity(
+    public Note updateNoteEntity(
             Note note,
             Whiskey whiskey,
             NoteBook noteBook
     ) {
         if(whiskey != null) note.setWhiskey(whiskey);
         if(noteBook != null) note.setNotebook(noteBook);
-        if(whiskey_name != null) note.setWhiskey_name(whiskey_name);
+        if(whiskeyName != null) note.setWhiskeyName(whiskeyName);
         if(distiller != null) note.setDistiller(distiller);
         if(price != null) note.setPrice(price);
         if(rating != null) note.setRating(rating);

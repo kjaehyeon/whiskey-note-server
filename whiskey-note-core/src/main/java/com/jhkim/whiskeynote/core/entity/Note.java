@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Table(name = "note")
 @Entity
 @EqualsAndHashCode(callSuper = false)
+@ToString
 public class Note extends BaseEntity{
 
     @ManyToOne(cascade = CascadeType.REMOVE)
@@ -24,7 +25,7 @@ public class Note extends BaseEntity{
     private Whiskey whiskey;
 
     @Column(nullable = false)
-    private String whiskey_name;
+    private String whiskeyName;
     @Column(nullable = false)
     private Float rating;
 

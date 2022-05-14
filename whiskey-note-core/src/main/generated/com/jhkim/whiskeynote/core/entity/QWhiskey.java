@@ -23,21 +23,15 @@ public class QWhiskey extends EntityPathBase<Whiskey> {
 
     public final NumberPath<Float> alc = createNumber("alc", Float.class);
 
-    public final StringPath bottled_for = createString("bottled_for");
+    public final StringPath bottledFor = createString("bottledFor");
 
     public final StringPath bottler = createString("bottler");
 
     public final StringPath brand = createString("brand");
 
-    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> cask_strength = createEnum("cask_strength", com.jhkim.whiskeynote.core.constant.Bool3.class);
-
-    public final StringPath cask_type = createString("cask_type");
+    public final StringPath caskType = createString("caskType");
 
     public final EnumPath<com.jhkim.whiskeynote.core.constant.WhiskeyCategory> category = createEnum("category", com.jhkim.whiskeynote.core.constant.WhiskeyCategory.class);
-
-    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> chillfilterd = createEnum("chillfilterd", com.jhkim.whiskeynote.core.constant.Bool3.class);
-
-    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> colored = createEnum("colored", com.jhkim.whiskeynote.core.constant.Bool3.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -49,17 +43,23 @@ public class QWhiskey extends EntityPathBase<Whiskey> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
+    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> isCaskStrength = createEnum("isCaskStrength", com.jhkim.whiskeynote.core.constant.Bool3.class);
+
+    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> isChillfiltered = createEnum("isChillfiltered", com.jhkim.whiskeynote.core.constant.Bool3.class);
+
+    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> isColored = createEnum("isColored", com.jhkim.whiskeynote.core.constant.Bool3.class);
+
+    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> isSingleCask = createEnum("isSingleCask", com.jhkim.whiskeynote.core.constant.Bool3.class);
+
+    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> isSmallBatch = createEnum("isSmallBatch", com.jhkim.whiskeynote.core.constant.Bool3.class);
+
     public final StringPath name = createString("name");
 
-    public final NumberPath<Integer> retail_price = createNumber("retail_price", Integer.class);
-
-    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> single_cask = createEnum("single_cask", com.jhkim.whiskeynote.core.constant.Bool3.class);
+    public final NumberPath<Integer> retailPrice = createNumber("retailPrice", Integer.class);
 
     public final NumberPath<Integer> size = createNumber("size", Integer.class);
 
-    public final EnumPath<com.jhkim.whiskeynote.core.constant.Bool3> small_batch = createEnum("small_batch", com.jhkim.whiskeynote.core.constant.Bool3.class);
-
-    public final NumberPath<Integer> stated_age = createNumber("stated_age", Integer.class);
+    public final NumberPath<Integer> statedAge = createNumber("statedAge", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;

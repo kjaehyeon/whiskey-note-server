@@ -1,8 +1,8 @@
 package com.jhkim.whiskeynote.api.controller;
 
 import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
-import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDto;
-import com.jhkim.whiskeynote.api.dto.notebook.NoteBookResponse;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.api.service.NoteBookService;
 import com.jhkim.whiskeynote.core.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class NoteBookController {
 
     @PostMapping
     public ResponseEntity<Void> createNoteBook(
-           @Valid @RequestBody NoteBookDto noteBookDto,
+           @Valid @RequestBody NoteBookCreateRequest noteBookDto,
            User user
     ){
 
@@ -34,7 +34,7 @@ public class NoteBookController {
 
     @PutMapping("/{notebookId}")
     public ResponseEntity<Void> updateNoteBook(
-            @Valid @RequestBody NoteBookDto noteBookDto,
+            @Valid @RequestBody NoteBookCreateRequest noteBookDto,
             @PathVariable Long notebookId,
             User user
     ){
@@ -44,7 +44,7 @@ public class NoteBookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<NoteBookResponse>> getNoteBooks(
+    public ResponseEntity<List<NoteBookDetailResponse>> getNoteBooks(
         User user
     ){
         return new ResponseEntity<>(noteBookService.getNoteBooks(user), HttpStatus.OK);

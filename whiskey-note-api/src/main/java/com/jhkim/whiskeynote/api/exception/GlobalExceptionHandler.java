@@ -5,6 +5,7 @@ import com.amazonaws.SdkClientException;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -54,7 +55,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(
             Exception e
     ){
-       return makeErrorResponse(ErrorCode.INTERNAL_ERROR);
+        return new ResponseEntity<>(
+                new ErrorResponse(
+                        ErrorCode.INTERNAL_ERROR.getCode(),
+                        e.getMessage()
+                ),
+                ErrorCode.INTERNAL_ERROR.getHttpStatus()
+        );
     }
 
     private ResponseEntity<ErrorResponse> makeErrorResponse(

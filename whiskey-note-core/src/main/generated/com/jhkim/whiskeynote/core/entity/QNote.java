@@ -77,7 +77,7 @@ public class QNote extends EntityPathBase<Note> {
 
     public final QWhiskey whiskey;
 
-    public final StringPath whiskey_name = createString("whiskey_name");
+    public final StringPath whiskeyName = createString("whiskeyName");
 
     public final NumberPath<Integer> woody = createNumber("woody", Integer.class);
 
