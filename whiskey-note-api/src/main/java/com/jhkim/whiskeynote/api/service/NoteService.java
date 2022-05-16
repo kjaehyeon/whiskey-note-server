@@ -48,11 +48,12 @@ public class NoteService {
                         whiskey,
                         noteBook
                 ));
-
-        awsS3Service.uploadImages(
-                noteCreateRequest.getImages(),
-                S3Path.NOTE_IMAGE.getFolderName()
-        ).forEach(url -> noteImageRepository.save(NoteImage.of(savedNote, url)));
+        if(noteCreateRequest.getImages() != null){
+            awsS3Service.uploadImages(
+                    noteCreateRequest.getImages(),
+                    S3Path.NOTE_IMAGE.getFolderName()
+            ).forEach(url -> noteImageRepository.save(NoteImage.of(savedNote, url)));
+        }
     }
 
     @Transactional
@@ -123,6 +124,7 @@ public class NoteService {
             noteImageRepository.deleteAllByNote_Id(noteId);
         }
 
+        //여기 수정 필요
         return NoteDetailResponse.fromEntity(
                 noteRepository.save(noteCreateRequest.updateNoteEntity(note,whiskey,noteBook)),
                 awsS3Service.uploadImages(

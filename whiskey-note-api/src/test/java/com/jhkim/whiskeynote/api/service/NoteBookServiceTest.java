@@ -24,7 +24,6 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.ArgumentMatchers.any;
 
 
 @DisplayName("[유닛테스트] SERVICE - NoteBook 서비스")
@@ -35,29 +34,19 @@ class NoteBookServiceTest {
     @Mock private NoteBookRepository noteBookRepository;
     @Mock private NoteRepository noteRepository;
 
-    private NoteBookCreateRequest createNormalNoteBookDto(String title){
-        Random random = new Random();
-        return NoteBookCreateRequest.of(
-                title,
-                random.nextInt(255),
-                random.nextInt(255),
-                random.nextInt(255)
-        );
-    }
-
     //노트북 정상생성
     @DisplayName("[NOTEBOOK][POST] 노트북 생성 - 정상적인 데이터 & 정상 생성")
     @Test
     void givenNormalNoteBook_whenCreateNoteBook_thenReturnOK(){
         //Given
-        NoteBookCreateRequest noteBookDto = createNormalNoteBookDto("notebook 1");
+        NoteBookCreateRequest noteBookCreateRequest = createNormalNoteBookCreateRequest("notebook 1");
         User user = createUser("user1");
-        NoteBook noteBook = noteBookDto.toEntity(user);
+        NoteBook noteBook = noteBookCreateRequest.toEntity(user);
         given(noteBookRepository.findNoteBookByTitleAndWriter("notebook 1", user)).willReturn(Optional.empty());
         given(noteBookRepository.save(noteBook)).willReturn(noteBook);
 
         //When
-        sut.createNoteBook(noteBookDto, user);
+        sut.createNoteBook(noteBookCreateRequest, user);
 
         //Then
         then(noteBookRepository).should().save(noteBook);
@@ -68,7 +57,7 @@ class NoteBookServiceTest {
     @Test
     void givenDuplicatedNoteBook_whenCreateNoteBook_ThenReturnException(){
         //Given
-        NoteBookCreateRequest noteBookDto = createNormalNoteBookDto("notebook1");
+        NoteBookCreateRequest noteBookDto = createNormalNoteBookCreateRequest("notebook1");
         User user = createUser("user1");
         given(noteBookRepository.findNoteBookByTitleAndWriter(noteBookDto.getTitle(), user))
                 .willReturn(Optional.of(noteBookDto.toEntity(user)));
@@ -273,5 +262,14 @@ class NoteBookServiceTest {
     }
     private NoteBook createNoteBook(String title, User user){
         return NoteBook.of(title, user, 1,1,1);
+    }
+    private NoteBookCreateRequest createNormalNoteBookCreateRequest(String title){
+        Random random = new Random();
+        return NoteBookCreateRequest.of(
+                title,
+                random.nextInt(255),
+                random.nextInt(255),
+                random.nextInt(255)
+        );
     }
 }

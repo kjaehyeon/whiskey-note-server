@@ -50,10 +50,10 @@ public class NoteBookService {
 
     @Transactional
     public void deleteNoteBook(
-            Long notebook_id,
+            Long notebookId,
             User user
     ){
-       final NoteBook noteBook = noteBookRepository.findNoteBookById(notebook_id)
+       final NoteBook noteBook = noteBookRepository.findNoteBookById(notebookId)
                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
 
        checkNotebookWriter(noteBook, user);
@@ -61,6 +61,7 @@ public class NoteBookService {
        noteBookRepository.delete(noteBook);
     }
 
+    //TODO 해당 노트북에 존재하는 노트 개수도 응답에 추가바람
     @Transactional
     public List<NoteBookDetailResponse> getNoteBooks(
             User user
