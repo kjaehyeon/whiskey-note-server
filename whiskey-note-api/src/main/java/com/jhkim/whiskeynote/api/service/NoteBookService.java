@@ -24,28 +24,28 @@ public class NoteBookService {
 
     @Transactional
     public void createNoteBook(
-            NoteBookCreateRequest noteBookDto,
+            NoteBookCreateRequest noteBookCreateRequest,
             User user
     ){
-        checkNotebookDuplication(noteBookDto, user);
-        noteBookRepository.save(noteBookDto.toEntity(user));
+        checkNotebookDuplication(noteBookCreateRequest, user);
+        noteBookRepository.save(noteBookCreateRequest.toEntity(user));
     }
 
     @Transactional
     public void updateNoteBook(
             Long notebook_id,
-            NoteBookCreateRequest noteBookDto,
+            NoteBookCreateRequest noteBookCreateRequest,
             User user
     ){
         //변경하려는 이름이 중복되는지 확인
-        checkNotebookDuplication(noteBookDto, user);
+        checkNotebookDuplication(noteBookCreateRequest, user);
         //변경할 노트북이 존재하는지 확인
         NoteBook noteBook = noteBookRepository.findNoteBookById(notebook_id)
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
 
         checkNotebookWriter(noteBook, user);
 
-        noteBookRepository.save(noteBookDto.updateEntity(noteBook));
+        noteBookRepository.save(noteBookCreateRequest.updateEntity(noteBook));
     }
 
     @Transactional

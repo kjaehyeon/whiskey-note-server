@@ -11,10 +11,8 @@ import java.util.Optional;
 
 public interface NoteRepository extends JpaRepository<Note, Long> {
     List<Note> findAllByNotebook(NoteBook noteBook);
-    Optional<Note> findNoteById(Long noteId);
 
-    @Query("SELECT nt FROM Note nt JOIN FETCH nt.notebook WHERE nt.notebook.id = :notebookId")
-    List<Note> findAllByNotebook_Id(Long notebookId);
+    Optional<Note> findNoteById(Long noteId);
 
     @Modifying
     @Query("DELETE FROM Note WHERE id = ?1")

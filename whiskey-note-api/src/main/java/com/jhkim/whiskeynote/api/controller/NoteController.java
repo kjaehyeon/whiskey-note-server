@@ -19,12 +19,14 @@ public class NoteController {
     private final NoteService noteService;
 
     @PostMapping
-    public ResponseEntity<Void> createNote(
+    public ResponseEntity<NoteDetailResponse> createNote(
             @Valid @ModelAttribute NoteCreateRequest noteCreateRequest,
             User user
     ){
-        noteService.createNote(noteCreateRequest, user);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(
+                noteService.createNote(noteCreateRequest, user),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping("/{noteId}")
@@ -38,22 +40,20 @@ public class NoteController {
 
     @GetMapping("/{noteId}")
     public ResponseEntity<NoteDetailResponse> getNote(
-            @PathVariable Long noteId,
-            User user
+            @PathVariable Long noteId
     ){
         return new ResponseEntity<>(
-                noteService.getNote(noteId, user),
+                noteService.getNote(noteId),
                 HttpStatus.OK
         );
     }
     @GetMapping
     public ResponseEntity<List<NoteDetailResponse>> getNotes(
-            @RequestParam("notebook") Long notebookId,
-            User user
+            @RequestParam("notebook") Long notebookId
     ){
 
         return new ResponseEntity<>(
-                noteService.getNotes(notebookId, user),
+                noteService.getNotes(notebookId),
                 HttpStatus.OK
         );
     }
@@ -64,7 +64,6 @@ public class NoteController {
             @Valid @ModelAttribute NoteCreateRequest noteCreateRequest,
             User user
     ){
-        noteService.updateNote(noteId, noteCreateRequest, user);
         return new ResponseEntity<>(
                 noteService.updateNote(noteId, noteCreateRequest, user),
                 HttpStatus.OK

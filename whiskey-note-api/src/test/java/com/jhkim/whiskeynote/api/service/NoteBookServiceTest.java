@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.*;
 
 
-@DisplayName("[유닛테스트] SERVICE - NoteBook 서비스")
+@DisplayName("[유닛테스트] SERVICE - NOTEBOOK 서비스")
 @ExtendWith(MockitoExtension.class)
 class NoteBookServiceTest {
 
@@ -206,52 +206,13 @@ class NoteBookServiceTest {
         assertThat(list).hasSize(3);
     }
 
-    //단일 노트북 정상 조회 - 해당 노트북에 속한 노트의 리스트 반환
-    @DisplayName("[NOTEBOOK][GET] 단일 노트북 조회 - 해당 노트북에 속한 노트의 리스트 정상 반환")
-    @Test
-    void givenNotebookId_whenGetNotebook_thenReturnListOfNote(){
-        //Given
-        Long notebook_id = 1L;
-        NoteBook noteBook = NoteBook.of("notebook1", null, 1,1,1);
-        given(noteBookRepository.findNoteBookById(notebook_id)).willReturn(Optional.of(noteBook));
-        given(noteRepository.findAllByNotebook(noteBook)).willReturn(
-                List.of(
-                        createNote(noteBook),
-                        createNote(noteBook),
-                        createNote(noteBook)
-                )
-        );
-        //When
-        List<NoteDetailResponse> noteDtoList = sut.getNoteBook(notebook_id);
-        //Then
-        then(noteRepository).should().findAllByNotebook(noteBook);
-        assertThat(noteDtoList)
-                .hasSize(3);
-        assertThat(noteDtoList.get(0))
-                .isInstanceOf(NoteDetailResponse.class);
-    }
-    //존재하지 않는 노트북 단일 조회시 예외 반환
-    @DisplayName("[NOTEBOOK[GET] 단일 노트북 조회 - 존재하지 않는 노트북 조회시 예외반환")
-    @Test
-    void givenNotExistNotebook_whenGetNotebook_thenReturnException(){
-        //Given
-        Long notebook_id = 1L;
-        NoteBook noteBook = NoteBook.of("notebook1", null, 1,1,1);
-        given(noteBookRepository.findNoteBookById(notebook_id)).willReturn(Optional.empty());
-
-        //When
-        Throwable throwable = catchThrowable(() -> sut.getNoteBook(notebook_id));
-
-        //Then
-        assertThat(throwable).isInstanceOf(GeneralException.class)
-                .hasMessageContaining(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
-
-    }
-
-    private Note createNote(NoteBook noteBook){
+    private Note createNote(
+            User user, NoteBook noteBook
+    ){
         return Note.of(
                 noteBook,
                 null,
+                user,
                 "wild turkey"
                 ,1F,null,1,1,null,null,null,null,null,1,
                 1,1,1,1,1,1,1,1,1,1,1

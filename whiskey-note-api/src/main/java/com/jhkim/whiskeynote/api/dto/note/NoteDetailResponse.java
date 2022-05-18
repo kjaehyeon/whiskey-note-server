@@ -3,6 +3,7 @@ package com.jhkim.whiskeynote.api.dto.note;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
 import com.jhkim.whiskeynote.core.constant.WhiskeyColor;
 import com.jhkim.whiskeynote.core.entity.Note;
+import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class NoteDetailResponse {
     @NotNull
     private Long notebookId;
     private WhiskeyDetailResponse whiskey;
+    private String writer;
 
     @NotNull
     private String whiskeyName;
@@ -58,8 +60,9 @@ public class NoteDetailResponse {
             Note note,
             List<String> imageUrls
     ){
-
         return NoteDetailResponse.builder()
+                .id(note.getId())
+                .writer(note.getWriter().getUsername())
                 .whiskey(WhiskeyDetailResponse.fromEntity(note.getWhiskey()))
                 .notebookId(note.getNotebook().getId())
                 .whiskeyName(note.getWhiskeyName())

@@ -81,6 +81,8 @@ public class QNote extends EntityPathBase<Note> {
 
     public final NumberPath<Integer> woody = createNumber("woody", Integer.class);
 
+    public final QUser writer;
+
     public QNote(String variable) {
         this(Note.class, forVariable(variable), INITS);
     }
@@ -101,6 +103,7 @@ public class QNote extends EntityPathBase<Note> {
         super(type, metadata, inits);
         this.notebook = inits.isInitialized("notebook") ? new QNoteBook(forProperty("notebook"), inits.get("notebook")) : null;
         this.whiskey = inits.isInitialized("whiskey") ? new QWhiskey(forProperty("whiskey")) : null;
+        this.writer = inits.isInitialized("writer") ? new QUser(forProperty("writer")) : null;
     }
 
 }

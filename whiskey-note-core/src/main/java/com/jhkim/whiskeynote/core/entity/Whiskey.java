@@ -8,7 +8,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @Builder
 @Table(name = "whiskey")

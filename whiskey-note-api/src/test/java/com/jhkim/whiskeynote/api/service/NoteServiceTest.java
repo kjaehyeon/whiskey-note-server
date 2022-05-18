@@ -1,6 +1,7 @@
 package com.jhkim.whiskeynote.api.service;
 
 import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
+import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.core.constant.*;
 import com.jhkim.whiskeynote.core.entity.*;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
@@ -9,6 +10,8 @@ import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
 import com.jhkim.whiskeynote.core.repository.NoteImageRepository;
 import com.jhkim.whiskeynote.core.repository.NoteRepository;
 import com.jhkim.whiskeynote.core.repository.WhiskeyRepository;
+import com.jhkim.whiskeynote.core.repository.querydsl.NoteImageRepositoryCustom;
+import com.jhkim.whiskeynote.core.repository.querydsl.NoteRepositoryCustom;
 import com.jhkim.whiskeynote.core.service.AwsS3Service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,23 +40,25 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-@DisplayName("[유닛테스트] SERVICE - Note 서비스")
+@DisplayName("[유닛테스트] SERVICE - NOTE 서비스")
 @ExtendWith(MockitoExtension.class)
 public class NoteServiceTest {
 
     @InjectMocks private NoteService sut;
     @Mock private NoteRepository noteRepository;
+    @Mock private NoteRepositoryCustom noteRepositoryCustom;
     @Mock private NoteBookRepository noteBookRepository;
     @Mock private NoteImageRepository noteImageRepository;
+    @Mock private NoteImageRepositoryCustom noteImageRepositoryCustom;
     @Mock private WhiskeyRepository whiskeyRepository;
     @Mock private AwsS3Service awsS3Service;
 
     /**
      * createNote()
      */
-    //노트 정상 생성 (이미지 함께)
+    @DisplayName("[NOTE][CREATE] 노트 생성 - 노트 정상 생성(이미지 있음)")
     @Test
-    void givenNormalNoteCreateRequest_whenCreateNote_thenReturnOk(){
+    void givenNormalNoteCreateRequest_whenCreateNote_thenReturnNoteDetailResponse(){
         //Given
         User user = createUser("user1");
         Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
@@ -65,26 +70,32 @@ public class NoteServiceTest {
                         WhiskeyColor.AMBER.name(),
                         createMultiFiles(2)
                 );
-        List<String> urls = List.of("url1", "url1");
+        List<String> urls = List.of("url1", "url2");
         given(whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskeyId()))
                 .willReturn(Optional.of(whiskey));
         given(noteBookRepository.findNoteBookById(noteCreateRequest.getNotebookId()))
                 .willReturn(Optional.of(noteBook));
+        given(noteRepository.save(noteCreateRequest.toEntity(user,whiskey, noteBook)))
+                .willReturn(noteCreateRequest.toEntity(user, whiskey, noteBook));
         given(awsS3Service.uploadImages(
                 noteCreateRequest.getImages(),
                 S3Path.NOTE_IMAGE.getFolderName())).willReturn(urls);
 
         //When
-        sut.createNote(noteCreateRequest, user);
+        NoteDetailResponse createdNote = sut.createNote(noteCreateRequest, user);
 
         //Then
-        then(noteRepository).should().save(noteCreateRequest.toEntity(whiskey, noteBook));
+        then(noteRepository).should().save(noteCreateRequest.toEntity(user, whiskey, noteBook));
         then(noteImageRepository).should(times(urls.size())).save(any());
+        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntity(
+                noteCreateRequest.toEntity(user, whiskey, noteBook),
+                urls
+        ));
     }
 
-    //노트 정상 생성 (이미지 없이)
+    @DisplayName("[NOTE][CREATE] 노트 생성 - 노트 정상 생성 (이미지 없음)")
     @Test
-    void givenNormalNoteWithNoImage_whenCreateNote_thenReturnOK(){
+    void givenNormalNoteWithNoImage_whenCreateNote_thenReturnNoteDetailResponse(){
         //Given
         User user = createUser("user1");
         Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
@@ -96,20 +107,28 @@ public class NoteServiceTest {
                         WhiskeyColor.AMBER.name(),
                         createMultiFiles(0)
                 );
+        List<String> urls = List.of();
         given(whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskeyId()))
                 .willReturn(Optional.of(whiskey));
         given(noteBookRepository.findNoteBookById(noteCreateRequest.getNotebookId()))
                 .willReturn(Optional.of(noteBook));
+        given(noteRepository.save(noteCreateRequest.toEntity(user, whiskey, noteBook)))
+                .willReturn(noteCreateRequest.toEntity(user, whiskey, noteBook));
 
         //When
-        sut.createNote(noteCreateRequest, user);
+        NoteDetailResponse createdNote = sut.createNote(noteCreateRequest, user);
         //Then
-        then(noteRepository).should().save(noteCreateRequest.toEntity(whiskey, noteBook));
+        then(noteRepository).should().save(noteCreateRequest.toEntity(user, whiskey, noteBook));
         then(noteImageRepository).shouldHaveNoInteractions();
+        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntity(
+                noteCreateRequest.toEntity(user, whiskey, noteBook),
+                urls
+        ));
     }
-    //참조하는 위스키 없이 노트 정상 생성
+
+    @DisplayName("[NOTE][CREATE] 노트 생성 - 노트 정상 생성(참조하는 위스키 없음)")
     @Test
-    void givenNormalNoteWithNoWhiskey_whenCreateNote_thenReturnOK(){
+    void givenNormalNoteWithNoWhiskey_whenCreateNote_thenReturnNoteDetailResponse(){
         //Given
         User user = createUser("user1");
         Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
@@ -121,17 +140,25 @@ public class NoteServiceTest {
                         WhiskeyColor.AMBER.name(),
                         createMultiFiles(0)
                 );
+        List<String> urls = List.of();
         given(whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskeyId()))
                 .willReturn(Optional.of(whiskey));
         given(noteBookRepository.findNoteBookById(noteCreateRequest.getNotebookId()))
                 .willReturn(Optional.of(noteBook));
+        given(noteRepository.save(noteCreateRequest.toEntity(user, whiskey, noteBook)))
+                .willReturn(noteCreateRequest.toEntity(user, whiskey, noteBook));
 
         //When
-        sut.createNote(noteCreateRequest, user);
+        NoteDetailResponse createdNote = sut.createNote(noteCreateRequest, user);
         //Then
-        then(noteRepository).should().save(noteCreateRequest.toEntity(whiskey, noteBook));
+        then(noteRepository).should().save(noteCreateRequest.toEntity(user, whiskey, noteBook));
+        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntity(
+                noteCreateRequest.toEntity(user, whiskey, noteBook),
+                urls
+        ));
     }
-    //존재하지 않는 위스키로 생성요청
+
+    @DisplayName("[NOTE][CREATE] 노트 생성 - 존재하지 않는 위스키ID로 노트 생성 요청")
     @Test
     void givenNotExistWhiskey_whenCreateNote_thenReturnException(){
         //Given
@@ -155,7 +182,8 @@ public class NoteServiceTest {
         assertThat(((GeneralException)throwable)
                 .getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
     }
-    //존재하지 않는 노트북에 생성요청
+
+    @DisplayName("[NOTE][CREATE] 노트 생성 - 존재하지 않는 노트북ID에 생성요청")
     @Test
     void givenNotExistNotebook_whenCreateNote_thenReturnException(){
         //Given
@@ -186,14 +214,17 @@ public class NoteServiceTest {
     /**
      * deleteNote()
      */
-    //노트 정상 삭제(이미지 없는경우)
+    @DisplayName("[NOTE][DELETE] 노트 삭제 - 노트 정상 삭제(이미지 없음)")
     @Test
-    void givenNoteId_whenDeleteNote_thenOK(){
+    void givenNoteId_whenDeleteNote_thenReturnOK(){
         //Given
         User user = createUser("user1");
         Long noteId = 1l;
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+
         given(noteRepository.findNoteById(noteId))
-                .willReturn(Optional.of(createNormalNote(user)));
+                .willReturn(Optional.of(createNormalNote(user, whiskey, noteBook)));
         given(noteImageRepository.findNoteImageByNote_Id(noteId)).willReturn(List.of());
         //When
         sut.deleteNote(noteId, user);
@@ -201,13 +232,15 @@ public class NoteServiceTest {
         then(awsS3Service).shouldHaveNoInteractions();
         then(noteRepository).should().deleteNoteById(noteId);
     }
-    //노트 정상 삭제(이미지 있는 경우)
+    @DisplayName("[NOTE][DELETE] 노트 삭제 - 노트 정상 삭졔(이미지 있음)")
     @Test
-    void givenNoteIdWithImages_whenDeleteNote_thenOK(){
+    void givenNoteIdWithImages_whenDeleteNote_thenReturnOK(){
         //Given
         User user = createUser("user1");
         Long noteId = 1l;
-        Note note = createNormalNote(user);
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+        Note note = createNormalNote(user, whiskey, noteBook);
         List<NoteImage> noteImages = List.of(
                 NoteImage.of(note, "url1"),
                 NoteImage.of(note, "url2")
@@ -221,15 +254,19 @@ public class NoteServiceTest {
         //Then
         then(awsS3Service).should(times(noteImages.size())).deleteImage(any());
         then(noteRepository).should().deleteNoteById(noteId);
+        then(noteImageRepositoryCustom).should().deleteAllByNote_id(noteId);
     }
-    //삭제 요청한 유저가 노트 작성자가 아닌 경우
+
+    @DisplayName("[NOTE][DELETE] 노트 삭제 - 노트 작성자가 아닌 유저가 노트 삭제 요청")
     @Test
-    void givenNotWriterOfNote_whenDeleteNote_thenException(){
+    void givenNotWriterOfNote_whenDeleteNote_thenReturnException(){
         //Given
         User noteOwner = createUser("user1");
         User anotherUser = createUser("user2");
         Long noteId = 1l;
-        Note note = createNormalNote(noteOwner);
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",noteOwner);
+        Note note = createNormalNote(noteOwner, whiskey, noteBook);
         given(noteRepository.findNoteById(noteId))
                 .willReturn(Optional.of(note));
         //When
@@ -239,13 +276,16 @@ public class NoteServiceTest {
         assertThat(((GeneralException)throwable)
                 .getErrorCode()).isEqualTo(ErrorCode.FORBIDDEN);
     }
-    //존재하지 않는 노트인 경우
+    @DisplayName("[NOTE][DELETE] 노트 삭제 - 존재하지 않는 노트 삭제 요청")
     @Test
-    void givenNotExistNoteId_whenDeleteNote_thenException(){
+    void givenNotExistNoteId_whenDeleteNote_thenReturnException(){
         //Given
         User user = createUser("user1");
         Long noteId = 1l;
-        Note note = createNormalNote(user);
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+        Note note = createNormalNote(user, whiskey, noteBook);
+
         given(noteRepository.findNoteById(noteId))
                 .willReturn(Optional.empty());
         //When
@@ -260,25 +300,247 @@ public class NoteServiceTest {
     /**
      * updateNote()
      */
-    //노트 정상 수정
-    //수정 요청한 유저가 노트 작성자가 아닌경우
-    //수정 요청에 이미지가 비어 있는 경우
-    //수정할 노트가 존재하지 않는 경우
-    //whiskey color가 존재하지 않는 Enum인 경우
-    //존재하지 않는 위스키로 수정요청
-    //존재하지 않는 노트북으로 수정요청'
+    @DisplayName("[NOTE][PUT] 노트 수정 - 노트 정상 수정(이미지 있음)")
+    @Test
+    void givenNormalUpdateRequest_whenUpdateNote_thenReturnNoteDetailResponse(){
+        //Given
+        User user = createUser("user1");
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+        Long noteId = 1l;
+        Note note = createNormalNote(user, whiskey, noteBook);
+        NoteCreateRequest noteUpdateRequest =
+                createNormalNoteCreateRequest(
+                        whiskey,
+                        noteBook,
+                        WhiskeyColor.AMBER.name(),
+                        createMultiFiles(2)
+                );
+        List<String> urls = List.of("url1", "url2");
 
+        given(noteRepository.findNoteById(noteId))
+                .willReturn(Optional.of(note));
+        given(whiskeyRepository.findWhiskeyById(whiskey.getId()))
+                .willReturn(Optional.of(whiskey));
+        given(noteBookRepository.findNoteBookById(noteUpdateRequest.getNotebookId()))
+                .willReturn(Optional.of(noteBook));
+        given(awsS3Service.uploadImages(noteUpdateRequest.getImages(), S3Path.NOTE_IMAGE.getFolderName()))
+                .willReturn(urls);
+
+        //When
+        NoteDetailResponse result = sut.updateNote(noteId, noteUpdateRequest, user);
+        //Then
+        assertThat(result).isEqualTo(NoteDetailResponse
+                .fromEntity(noteUpdateRequest.toEntity(user, whiskey, noteBook), urls));
+
+    }
+
+    @DisplayName("[NOTE][PUT] 노트 수정 - 노트 정상 수정(이미지 있음)")
+    @Test
+    void givenNotWriterOfNote_whenUpdateNote_thenReturnException(){
+        //Given
+        User owner = createUser("user1");
+        User anotherUser = createUser("user2");
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1", owner);
+        Long noteId = 1l;
+        NoteCreateRequest noteUpdateRequest =
+                createNormalNoteCreateRequest(
+                        whiskey,
+                        noteBook,
+                        WhiskeyColor.AMBER.name(),
+                        createMultiFiles(2)
+                );
+        given(noteRepository.findNoteById(noteId))
+                .willReturn(Optional.of(
+                        noteUpdateRequest.toEntity(owner, whiskey, noteBook))
+                );
+        //When
+        Throwable throwable = catchThrowable(() -> sut.updateNote(noteId, noteUpdateRequest, anotherUser));
+        //Then
+        assertThat(throwable).isInstanceOf(GeneralException.class);
+        assertThat(((GeneralException)throwable).getErrorCode())
+                .isEqualTo(ErrorCode.FORBIDDEN);
+
+    }
+
+    @DisplayName("[NOTE][PUT] 노트 수정 - 수정할 노트가 존재하지 않음")
+    @Test
+    void givenNotExistNote_whenUpdateNote_thenReturnException(){
+        //Given
+        User user = createUser("user1");
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+        Long noteId = 1l;
+        NoteCreateRequest noteUpdateRequest =
+                createNormalNoteCreateRequest(
+                        whiskey,
+                        noteBook,
+                        WhiskeyColor.AMBER.name(),
+                        createMultiFiles(2)
+                );
+        given(noteRepository.findNoteById(noteId))
+                .willReturn(Optional.empty());
+        //When
+        Throwable throwable = catchThrowable(() -> sut.updateNote(noteId, noteUpdateRequest, user));
+        //Then
+        assertThat(throwable).isInstanceOf(GeneralException.class);
+        assertThat(((GeneralException)throwable).getErrorCode())
+                .isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+    }
+
+
+    @DisplayName("[NOTE][PUT] 노트 수정 - 존재하지 않는 위스키로 수정요청")
+    @Test
+    void givenNotExistWhiskey_whenUpdateNote_thenReturnException(){
+        //Given
+        User user = createUser("user1");
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+        Long noteId = 1l;
+        NoteCreateRequest noteUpdateRequest =
+                createNormalNoteCreateRequest(
+                        whiskey,
+                        noteBook,
+                        WhiskeyColor.AMBER.name(),
+                        createMultiFiles(2)
+                );
+        given(noteRepository.findNoteById(noteId))
+                .willReturn(Optional.of(noteUpdateRequest.toEntity(user, whiskey, noteBook)));
+        given(whiskeyRepository.findWhiskeyById(noteUpdateRequest.getWhiskeyId()))
+                .willReturn(Optional.empty());
+        //When
+        Throwable throwable = catchThrowable(() -> sut.updateNote(noteId, noteUpdateRequest, user));
+        //Then
+        assertThat(throwable).isInstanceOf(GeneralException.class);
+        assertThat(((GeneralException)throwable).getErrorCode())
+                .isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+    }
+
+    @DisplayName("[NOTE][PUT] 노트 수정 - 존재하지 않는 노트북으로 수정요청")
+    @Test
+    void givenNotExistNotebook_whenUpdateNote_thenReturnException(){
+        //Given
+        User user = createUser("user1");
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+        Long noteId = 1l;
+        NoteCreateRequest noteUpdateRequest =
+                createNormalNoteCreateRequest(
+                        whiskey,
+                        noteBook,
+                        WhiskeyColor.AMBER.name(),
+                        createMultiFiles(2)
+                );
+        given(noteRepository.findNoteById(noteId))
+                .willReturn(Optional.of(noteUpdateRequest.toEntity(user, whiskey, noteBook)));
+        given(whiskeyRepository.findWhiskeyById(noteUpdateRequest.getWhiskeyId()))
+                .willReturn(Optional.of(whiskey));
+        given(noteBookRepository.findNoteBookById(noteBook.getId()))
+                .willReturn(Optional.empty());
+        //When
+        Throwable throwable = catchThrowable(() -> sut.updateNote(noteId, noteUpdateRequest, user));
+        //Then
+        assertThat(throwable).isInstanceOf(GeneralException.class);
+        assertThat(((GeneralException)throwable).getErrorCode())
+                .isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+    }
     /**
      * getNote()
      */
-    //노트 정상 조회
-    //존재하지 않는 노트 조회하는 경우
+    @DisplayName("[NOTE][GET] 노트 단일 조회 - 정상 조회")
+    @Test
+    void givenNoteId_whenGetNote_thenReturnNoteDetailResponse(){
+        //Given
+        Long noteId = 1l;
+        User user = createUser("user1");
+        List<String> urls = List.of("url1", "url2");
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+        Note note = createNormalNote(user, whiskey, noteBook);
 
+        given(noteRepositoryCustom.findNoteById(noteId))
+                .willReturn(Optional.of(note));
+        given(noteImageRepository.findNoteImageByNote_Id(noteId))
+                .willReturn(List.of(NoteImage.of(note, urls.get(0)), NoteImage.of(note, urls.get(1))));
+        //When
+        NoteDetailResponse result = sut.getNote(noteId);
+        //Then
+        assertThat(result)
+                .isEqualTo(NoteDetailResponse.fromEntity(createNormalNote(user, whiskey, noteBook), urls));
+    }
+    @DisplayName("[NOTE][GET] 노트 단일 조회 - 존재하지 않는 노트 조회")
+    @Test
+    void givenNoteExistNoteId_whenGetNote_thenReturnException(){
+        //Given
+        Long noteId = 1l;
+        given(noteRepository.findNoteById(noteId))
+                .willReturn(Optional.empty());
+        //When
+        Throwable throwable = catchThrowable(() -> sut.getNote(noteId));
+        //Then
+        assertThat(throwable).isInstanceOf(GeneralException.class);
+        assertThat(((GeneralException)throwable).getErrorCode())
+                .isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+    }
     /**
      * getNotes()
      */
-    //노트 목록 정상 조회
-    //존재하지 않는 노트북의 노트목록을 조회하는 경우
+    @DisplayName("[NOTE][GET] 노트 목록 조회 - 정상 조회")
+    @Test
+    void givenNotebookId_whenGetNotes_thenReturnNoteDetailResponses(){
+        //Given
+        Long notebookId = 1l;
+        User user = createUser("user1");
+        Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
+        NoteBook noteBook = createNoteBook("note1",user);
+        Note note1 = createNormalNote(user, whiskey, noteBook);
+        Note note2 = createNormalNote(user, whiskey, noteBook);
+        List<String> note1Urls = List.of("note1url1", "note1url2");
+        List<String> note2Urls = List.of("note2url1", "note2url2");
+
+        given(noteBookRepository.findNoteBookById(notebookId))
+                .willReturn(Optional.of(noteBook));
+        given(noteRepository.findAllByNotebook(noteBook))
+                .willReturn(List.of(note1, note2));
+        given(noteImageRepository.findNoteImageByNote_Id(note1.getId()))
+                .willReturn(List.of(
+                        NoteImage.of(note1, note1Urls.get(0)),
+                        NoteImage.of(note1, note1Urls.get(1)
+                        )
+                ));
+        given(noteImageRepository.findNoteImageByNote_Id(note2.getId()))
+                .willReturn(List.of(
+                        NoteImage.of(note2, note2Urls.get(0)),
+                        NoteImage.of(note2, note2Urls.get(1)
+                        )
+                ));
+        //When
+        List<NoteDetailResponse> result = sut.getNotes(notebookId);
+        //Then
+        assertThat(result)
+                .hasSize(2)
+                .isNotEmpty()
+                .contains(
+                        NoteDetailResponse.fromEntity(note1,note1Urls),
+                        NoteDetailResponse.fromEntity(note2,note2Urls)
+                );
+    }
+    @DisplayName("[NOTE][GET] 노트 목록 조회 - 존재하지 않는 노트북ID 조회")
+    @Test
+    void givenNotExistNotebookId_whenGetNotes_thenReturnException(){
+        //Given
+        Long notebookId = 1l;
+        given(noteBookRepository.findNoteBookById(notebookId))
+                .willReturn(Optional.empty());
+
+        //When
+        Throwable throwable = catchThrowable(() -> sut.getNotes(notebookId));
+        //Then
+        assertThat(throwable).isInstanceOf(GeneralException.class);
+        assertThat(((GeneralException)throwable).getErrorCode())
+                .isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+    }
 
     private NoteCreateRequest createNormalNoteCreateRequest(
             Whiskey whiskey,
@@ -385,10 +647,36 @@ public class NoteServiceTest {
         return NoteBook.of(title, user, 1,1,1);
     }
     private Note createNormalNote(
-            User user
+            User user,
+            Whiskey whiskey,
+            NoteBook noteBook
     ){
         return Note.builder()
-                .notebook(createNoteBook("title1", user))
+                .writer(user)
+                .notebook(noteBook)
+                .whiskey(whiskey)
+                .whiskeyName(whiskey.getName())
+                .distiller("Macallan")
+                .price(99900)
+                .rating(4.0f)
+                .age(12)
+                .nose("nose")
+                .taste("taste")
+                .finish("finish")
+                .description("description")
+                .color(WhiskeyColor.AMBER)
+                .smokey(1)
+                .peaty(2)
+                .herbal(3)
+                .briny(1)
+                .vanilla(2)
+                .fruity(3)
+                .floral(1)
+                .woody(2)
+                .rich(3)
+                .spicy(1)
+                .sweet(2)
+                .salty(3)
                 .build();
     }
     private List<MultipartFile> createMultiFiles(Integer num){

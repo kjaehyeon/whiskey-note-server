@@ -1,12 +1,10 @@
 package com.jhkim.whiskeynote.core.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Collection;
@@ -17,8 +15,11 @@ import java.util.Collections;
 @AllArgsConstructor(staticName = "of")
 @Builder
 @Table(name = "user")
+@EqualsAndHashCode(callSuper = false)
 @Entity
 public class User extends BaseEntity implements UserDetails {
+
+    @Column(unique = true)
     private String username;
     private String password;
     private String email;

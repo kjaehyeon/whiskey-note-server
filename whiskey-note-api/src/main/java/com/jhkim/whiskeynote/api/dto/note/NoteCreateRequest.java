@@ -3,6 +3,7 @@ package com.jhkim.whiskeynote.api.dto.note;
 import com.jhkim.whiskeynote.core.constant.WhiskeyColor;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
+import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,10 +52,12 @@ public class NoteCreateRequest {
     private List<MultipartFile> images;
 
     public Note toEntity(
+            User writer,
             Whiskey whiskey,
             NoteBook noteBook
     ){
         return Note.builder()
+                .writer(writer)
                 .whiskey(whiskey)
                 .notebook(noteBook)
                 .whiskeyName(whiskeyName)

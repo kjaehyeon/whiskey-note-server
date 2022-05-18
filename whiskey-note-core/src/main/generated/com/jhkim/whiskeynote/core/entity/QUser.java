@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,28 +17,16 @@ public class QUser extends EntityPathBase<User> {
 
     private static final long serialVersionUID = -167704823L;
 
-    public static final QUser user1 = new QUser("user1");
+    public static final QUser user = new QUser("user");
 
     public final QBaseEntity _super = new QBaseEntity(this);
-
-    public final BooleanPath accountNonExpired = createBoolean("accountNonExpired");
-
-    public final BooleanPath accountNonLocked = createBoolean("accountNonLocked");
-
-    public final BooleanPath admin = createBoolean("admin");
-
-    public final CollectionPath<org.springframework.security.core.GrantedAuthority, SimplePath<org.springframework.security.core.GrantedAuthority>> authorities = this.<org.springframework.security.core.GrantedAuthority, SimplePath<org.springframework.security.core.GrantedAuthority>>createCollection("authorities", org.springframework.security.core.GrantedAuthority.class, SimplePath.class, PathInits.DIRECT2);
 
     public final StringPath authority = createString("authority");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final BooleanPath credentialsNonExpired = createBoolean("credentialsNonExpired");
-
     public final StringPath email = createString("email");
-
-    public final BooleanPath enabled = createBoolean("enabled");
 
     public final StringPath iconUrl = createString("iconUrl");
 
@@ -50,8 +37,6 @@ public class QUser extends EntityPathBase<User> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
-
-    public final BooleanPath user = createBoolean("user");
 
     public final StringPath username = createString("username");
 
