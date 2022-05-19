@@ -146,7 +146,6 @@ public class NoteService {
         return NoteDetailResponse.fromEntity(note, imageUrls);
     }
 
-    //TODO
     @Transactional
     public List<NoteDetailResponse> getNotes(
             Long notebookId

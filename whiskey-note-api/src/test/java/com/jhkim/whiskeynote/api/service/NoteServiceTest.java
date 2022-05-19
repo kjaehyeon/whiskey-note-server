@@ -13,6 +13,7 @@ import com.jhkim.whiskeynote.core.repository.WhiskeyRepository;
 import com.jhkim.whiskeynote.core.repository.querydsl.NoteImageRepositoryCustom;
 import com.jhkim.whiskeynote.core.repository.querydsl.NoteRepositoryCustom;
 import com.jhkim.whiskeynote.core.service.AwsS3Service;
+import org.assertj.core.data.Index;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -474,7 +475,7 @@ public class NoteServiceTest {
     void givenNoteExistNoteId_whenGetNote_thenReturnException(){
         //Given
         Long noteId = 1l;
-        given(noteRepository.findNoteById(noteId))
+        given(noteRepositoryCustom.findNoteById(noteId))
                 .willReturn(Optional.empty());
         //When
         Throwable throwable = catchThrowable(() -> sut.getNote(noteId));
@@ -495,7 +496,9 @@ public class NoteServiceTest {
         Whiskey whiskey = createWhiskey("Balvenie","Double Wood");
         NoteBook noteBook = createNoteBook("note1",user);
         Note note1 = createNormalNote(user, whiskey, noteBook);
+        note1.setId(1l);
         Note note2 = createNormalNote(user, whiskey, noteBook);
+        note2.setId(2l);
         List<String> note1Urls = List.of("note1url1", "note1url2");
         List<String> note2Urls = List.of("note2url1", "note2url2");
 
@@ -521,10 +524,8 @@ public class NoteServiceTest {
         assertThat(result)
                 .hasSize(2)
                 .isNotEmpty()
-                .contains(
-                        NoteDetailResponse.fromEntity(note1,note1Urls),
-                        NoteDetailResponse.fromEntity(note2,note2Urls)
-                );
+                .contains(NoteDetailResponse.fromEntity(note1,note1Urls), Index.atIndex(0))
+                .contains(NoteDetailResponse.fromEntity(note2,note2Urls), Index.atIndex(1));
     }
     @DisplayName("[NOTE][GET] 노트 목록 조회 - 존재하지 않는 노트북ID 조회")
     @Test

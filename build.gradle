@@ -12,6 +12,36 @@ subprojects { //공통 적용
     apply plugin: 'java-library'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
+
+//    test {
+//        useJUnitPlatform()
+//        finalizedBy jacocoTestReport
+//    }
+//
+//    jacocoTestReport {
+//        dependsOn test
+//        reports {
+//            html.enabled true
+//            xml.enabled true
+//            csv.enabled true
+//        }
+//        finalizedBy 'jacocoTestCoverageVerification'
+//    }
+//
+//    jacocoTestCoverageVerification {
+//        violationRules {
+//            rule {
+//                element = 'CLASS'
+//
+//                limit {
+//                    counter = 'BRANCH'
+//                    value = 'COVEREDRATIO'
+//                    minimum = 0.40
+//                }
+//            }
+//        }
+//    }
 
     group = 'com.example.springpracticecalendar'
     version = '0.0.1-SNAPSHOT'

@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @MappedSuperclass //이 엔티티의 테이블을 생성하지 않고 속성정보를 상속받을 수 있게한다.
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
