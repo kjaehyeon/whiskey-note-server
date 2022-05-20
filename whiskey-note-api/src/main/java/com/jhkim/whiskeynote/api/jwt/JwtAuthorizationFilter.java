@@ -35,7 +35,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-
         final String token = request.getHeader(JwtProperties.KEY_NAME);
         if(token != null){
             //authentication을 만들어서 SecurityContext에 넣어준다.

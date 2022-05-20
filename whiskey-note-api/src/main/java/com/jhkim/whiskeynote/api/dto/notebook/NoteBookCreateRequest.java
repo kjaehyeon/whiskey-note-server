@@ -5,12 +5,13 @@ import com.jhkim.whiskeynote.core.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
-@Builder
+
+@Getter
 @AllArgsConstructor(staticName = "of")
 public class NoteBookCreateRequest {
     @NotBlank

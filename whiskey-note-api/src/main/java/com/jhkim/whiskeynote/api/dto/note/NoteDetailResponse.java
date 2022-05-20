@@ -5,16 +5,15 @@ import com.jhkim.whiskeynote.core.constant.WhiskeyColor;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.entity.Whiskey;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor(staticName = "of")
+@EqualsAndHashCode
 public class NoteDetailResponse {
     @NotNull
     private Long id;

@@ -1,8 +1,9 @@
 package com.jhkim.whiskeynote.api.dto.auth;
 
+import com.jhkim.whiskeynote.core.dto.UserCreateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,4 +20,13 @@ public class SignUpRequest {
     @NotBlank
     @Email
     private String email;
+
+    public UserCreateRequest toUserCreateRequest(String authority){
+        return UserCreateRequest.builder()
+                .email(email)
+                .password(password)
+                .username(username)
+                .authority(authority)
+                .build();
+    }
 }

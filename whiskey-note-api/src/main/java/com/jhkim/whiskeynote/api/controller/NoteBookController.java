@@ -59,11 +59,4 @@ public class NoteBookController {
         return ResponseEntity.ok().build();
     }
 
-    //TODO
-    @GetMapping("/{notebookId}")
-    public ResponseEntity<List<NoteDetailResponse>> getNoteBook(
-            @PathVariable Long notebookId
-    ){
-        return new ResponseEntity<>(noteBookService.getNoteBook(notebookId), HttpStatus.OK);
-    }
 }

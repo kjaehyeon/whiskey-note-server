@@ -27,7 +27,8 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCH(30002, HttpStatus.BAD_REQUEST, "Password Not Matches"),
     TOKEN_EXPIRED(30003, HttpStatus.UNAUTHORIZED, "Token Expired"),
     INVALID_TOKEN(30004, HttpStatus.UNAUTHORIZED, "Invalid Token"),
-    FORBIDDEN(30005, HttpStatus.FORBIDDEN, "Forbidden Access"),
+    UNAUTHENTICATED(30005, HttpStatus.UNAUTHORIZED, "Unauthenticated User"),
+    FORBIDDEN(30006, HttpStatus.FORBIDDEN, "Forbidden Access"),
 
     //External Service Error
     AWS_S3_ERROR(40000, HttpStatus.INTERNAL_SERVER_ERROR, "AWS S3 Error")

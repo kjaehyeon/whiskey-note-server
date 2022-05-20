@@ -9,7 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @Builder
-@Table(name = "notebook")
+@Table(name = "note_book")
 @Entity
 @EqualsAndHashCode(callSuper = false)
 @ToString

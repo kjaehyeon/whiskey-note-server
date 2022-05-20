@@ -41,7 +41,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-@DisplayName("[유닛테스트] SERVICE - NOTE 서비스")
+@DisplayName("[유닛테스트] SERVICE - NOTE")
 @ExtendWith(MockitoExtension.class)
 public class NoteServiceTest {
 

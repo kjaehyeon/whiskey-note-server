@@ -26,27 +26,13 @@ public class AuthService {
     public void signUp(
             SignUpRequest signUpRequest
     ){
-        userService.create(
-                UserCreateRequest.builder()
-                        .email(signUpRequest.getEmail())
-                        .password(signUpRequest.getPassword())
-                        .username(signUpRequest.getUsername())
-                        .authority("ROLE_USER")
-                .build()
-        );
+        userService.create(signUpRequest.toUserCreateRequest("ROLE_USER"));
     }
 
     public void signUpAdmin(
             SignUpRequest signUpRequest
     ){
-        userService.create(
-                UserCreateRequest.builder()
-                        .email(signUpRequest.getEmail())
-                        .password(signUpRequest.getPassword())
-                        .username(signUpRequest.getUsername())
-                        .authority("ROLE_ADMIN")
-                        .build()
-        );
+        userService.create(signUpRequest.toUserCreateRequest("ROLE_ADMIN"));
     }
 
     public LoginResponse login(LogInRequest logInRequest) {

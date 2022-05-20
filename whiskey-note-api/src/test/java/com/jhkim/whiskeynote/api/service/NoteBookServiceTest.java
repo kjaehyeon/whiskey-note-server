@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.*;
 
 
-@DisplayName("[유닛테스트] SERVICE - NOTEBOOK 서비스")
+@DisplayName("[유닛테스트] SERVICE - NOTEBOOK")
 @ExtendWith(MockitoExtension.class)
 class NoteBookServiceTest {
 

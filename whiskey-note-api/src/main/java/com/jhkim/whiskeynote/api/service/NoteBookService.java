@@ -72,14 +72,6 @@ public class NoteBookService {
                 .collect(Collectors.toList());
     }
 
-    //TODO
-    @Transactional
-    public List<NoteDetailResponse> getNoteBook(
-            Long notebook_id
-    ){
-        return null;
-    }
-
     //변경하려는 노트북의 이름이 중복되었는지 확인
     private void checkNotebookDuplication(NoteBookCreateRequest noteBookDto, User user){
         noteBookRepository.findNoteBookByTitleAndWriter(noteBookDto.getTitle(), user)

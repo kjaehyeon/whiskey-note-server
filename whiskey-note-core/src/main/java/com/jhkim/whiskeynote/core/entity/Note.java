@@ -25,7 +25,7 @@ public class Note extends BaseEntity{
     private Whiskey whiskey;
 
     @ManyToOne
-    @JoinColumn(name = "user_")
+    @JoinColumn(name = "user_id")
     private User writer;
 
     @Column(nullable = false)
