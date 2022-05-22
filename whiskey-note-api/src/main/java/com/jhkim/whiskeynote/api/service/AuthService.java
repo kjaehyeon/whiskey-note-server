@@ -35,8 +35,9 @@ public class AuthService {
         userService.create(signUpRequest.toUserCreateRequest("ROLE_ADMIN"));
     }
 
-    public LoginResponse login(LogInRequest logInRequest) {
-
+    public LoginResponse login(
+            LogInRequest logInRequest
+    ) {
         final User user = userRepository.findUserByUsername(logInRequest.getUsername())
                 .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
 

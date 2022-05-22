@@ -139,12 +139,12 @@ public class JwtTest {
         //Given
         //When & Then
         mvc.perform(
-                        get("/test/jwt")
-                                .contentType(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isUnauthorized())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.code").value(ErrorCode.UNAUTHENTICATED.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.UNAUTHENTICATED.getMessage()));
+                    get("/test/jwt")
+                            .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isUnauthorized())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.UNAUTHENTICATED.getCode()))
+            .andExpect(jsonPath("$.message").value(ErrorCode.UNAUTHENTICATED.getMessage()));
     }
 
     public String createExpiredToken(User user){

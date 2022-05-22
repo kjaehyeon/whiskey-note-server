@@ -1,6 +1,6 @@
 package com.jhkim.whiskeynote.api.config;
 
-import com.jhkim.whiskeynote.core.entity.User;
+import com.jhkim.whiskeynote.core.dto.UserDto;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,14 +13,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Optional;
-
 @Component
 @Slf4j
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return User.class.isAssignableFrom(parameter.getParameterType());
+        return UserDto.class.isAssignableFrom(parameter.getParameterType());
     }
 
     @Override
@@ -31,9 +29,11 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
             WebDataBinderFactory binderFactory
     ) throws Exception {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if(authentication.getName().equals("anonymousUser")){
             throw new GeneralException(ErrorCode.UNAUTHENTICATED);
         }
+
         return authentication.getPrincipal();
     }
 

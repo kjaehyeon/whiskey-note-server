@@ -3,7 +3,7 @@ package com.jhkim.whiskeynote.api.controller;
 import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.api.service.NoteService;
-import com.jhkim.whiskeynote.core.entity.User;
+import com.jhkim.whiskeynote.core.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +21,12 @@ public class NoteController {
     @PostMapping
     public ResponseEntity<NoteDetailResponse> createNote(
             @Valid @ModelAttribute NoteCreateRequest noteCreateRequest,
-            User user
+            UserDto userDto
     ){
         return new ResponseEntity<>(
-                noteService.createNote(noteCreateRequest, user),
+                noteService.createNote(noteCreateRequest, userDto),
                 HttpStatus.OK
         );
-    }
-
-    @DeleteMapping("/{noteId}")
-    public ResponseEntity<Void> deleteNote(
-            @PathVariable Long noteId,
-            User user
-    ){
-        noteService.deleteNote(noteId, user);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{noteId}")
@@ -62,12 +53,21 @@ public class NoteController {
     public ResponseEntity<NoteDetailResponse> updateNote(
             @PathVariable Long noteId,
             @Valid @ModelAttribute NoteCreateRequest noteCreateRequest,
-            User user
+            UserDto userDto
     ){
         return new ResponseEntity<>(
-                noteService.updateNote(noteId, noteCreateRequest, user),
+                noteService.updateNote(noteId, noteCreateRequest, userDto),
                 HttpStatus.OK
         );
+    }
+
+    @DeleteMapping("/{noteId}")
+    public ResponseEntity<Void> deleteNote(
+            @PathVariable Long noteId,
+            UserDto userDto
+    ){
+        noteService.deleteNote(noteId, userDto);
+        return ResponseEntity.ok().build();
     }
 
 }

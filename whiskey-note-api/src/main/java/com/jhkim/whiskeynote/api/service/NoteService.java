@@ -3,13 +3,11 @@ package com.jhkim.whiskeynote.api.service;
 import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.core.constant.S3Path;
+import com.jhkim.whiskeynote.core.dto.UserDto;
 import com.jhkim.whiskeynote.core.entity.*;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
-import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
-import com.jhkim.whiskeynote.core.repository.NoteImageRepository;
-import com.jhkim.whiskeynote.core.repository.NoteRepository;
-import com.jhkim.whiskeynote.core.repository.WhiskeyRepository;
+import com.jhkim.whiskeynote.core.repository.*;
 import com.jhkim.whiskeynote.core.repository.querydsl.NoteImageRepositoryCustom;
 import com.jhkim.whiskeynote.core.repository.querydsl.NoteRepositoryCustom;
 import com.jhkim.whiskeynote.core.service.AwsS3Service;
@@ -31,19 +29,25 @@ public class NoteService {
     private final NoteBookRepository noteBookRepository;
     private final NoteImageRepository noteImageRepository;
     private final NoteImageRepositoryCustom noteImageRepositoryCustom;
+    private final UserRepository userRepository;
     private final WhiskeyRepository whiskeyRepository;
     private final AwsS3Service awsS3Service;
 
     @Transactional
     public NoteDetailResponse createNote(
             NoteCreateRequest noteCreateRequest,
-            User user
+            UserDto userDto
     ) {
-
+        final User user = getUserFromUserDto(userDto);
         final Note savedNote = noteRepository.save(makeNoteFromNoteCreateRequest(user, noteCreateRequest));
         final List<String> imageUrls = uploadAndSaveNoteImages(savedNote, noteCreateRequest);
 
         return NoteDetailResponse.fromEntity(savedNote, imageUrls);
+    }
+
+    private User getUserFromUserDto(UserDto userDto){
+        return userRepository.findUserByUsername(userDto.getUsername())
+                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
     }
 
     private Note makeNoteFromNoteCreateRequest(
@@ -70,66 +74,6 @@ public class NoteService {
                     });
         }
         return urls;
-    }
-
-    @Transactional
-    public void deleteNote(
-            Long noteId,
-            User user
-    ) {
-        checkNoteWriterByNoteId(noteId, user);
-        deleteNoteImages(noteId);
-        noteRepository.deleteNoteById(noteId);
-    }
-
-    private void checkNoteWriterByNoteId(Long noteId, User user){
-        final Note note = noteRepository.findNoteById(noteId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
-        checkNoteWriter(note, user);
-    }
-
-    private void checkNoteWriter(Note note, User user){
-        if(!note.getWriter().getUsername().equals(user.getUsername())){
-            throw new GeneralException(ErrorCode.FORBIDDEN);
-        }
-    }
-    private void deleteNoteImages(Long noteId){
-        final List<NoteImage> noteImages = noteImageRepository.findNoteImageByNote_Id(noteId);
-        if(!noteImages.isEmpty()){
-            noteImages.forEach(noteImage -> awsS3Service.deleteImage(noteImage.getUrl()));
-            noteImageRepositoryCustom.deleteAllByNote_id(noteId);
-        }
-    }
-
-    @Transactional
-    public NoteDetailResponse updateNote(
-            Long noteId,
-            NoteCreateRequest noteCreateRequest,
-            User user
-    ) {
-        checkNoteWriterByNoteId(noteId, user);
-
-        final Note originalNote = noteRepository.findNoteById(noteId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
-        final Note updatedNote = updateOriginalNote(originalNote, noteCreateRequest);
-
-        deleteNoteImages(noteId);
-
-        final List<String> imageUrls = uploadAndSaveNoteImages(updatedNote, noteCreateRequest);
-
-        return NoteDetailResponse.fromEntity(updatedNote, imageUrls);
-    }
-
-    private Note updateOriginalNote(
-            Note originalNote,
-            NoteCreateRequest noteCreateRequest
-    ){
-        final Whiskey whiskey = whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskeyId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
-        final NoteBook noteBook = noteBookRepository.findNoteBookById(noteCreateRequest.getNotebookId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        return noteCreateRequest.updateNoteEntity(originalNote, whiskey, noteBook);
     }
 
     @Transactional
@@ -162,5 +106,66 @@ public class NoteService {
                                 .map(NoteImage::getUrl)
                                 .collect(Collectors.toList())
                 )).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public NoteDetailResponse updateNote(
+            Long noteId,
+            NoteCreateRequest noteCreateRequest,
+            UserDto userDto
+    ) {
+        checkNoteWriterByNoteId(noteId, userDto);
+
+        final Note originalNote = noteRepository.findNoteById(noteId)
+                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+        final Note updatedNote = updateOriginalNote(originalNote, noteCreateRequest);
+
+        deleteNoteImages(noteId);
+
+        final List<String> imageUrls = uploadAndSaveNoteImages(updatedNote, noteCreateRequest);
+
+        return NoteDetailResponse.fromEntity(updatedNote, imageUrls);
+    }
+
+    private void checkNoteWriterByNoteId(Long noteId, UserDto userDto){
+        final Note note = noteRepository.findNoteById(noteId)
+                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+        checkNoteWriter(note, userDto);
+    }
+
+    private void deleteNoteImages(Long noteId){
+        final List<NoteImage> noteImages = noteImageRepository.findNoteImageByNote_Id(noteId);
+        if(!noteImages.isEmpty()){
+            noteImages.forEach(noteImage -> awsS3Service.deleteImage(noteImage.getUrl()));
+            noteImageRepositoryCustom.deleteAllByNote_id(noteId);
+        }
+    }
+
+    private Note updateOriginalNote(
+            Note originalNote,
+            NoteCreateRequest noteCreateRequest
+    ){
+        final Whiskey whiskey = whiskeyRepository.findWhiskeyById(noteCreateRequest.getWhiskeyId())
+                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+        final NoteBook noteBook = noteBookRepository.findNoteBookById(noteCreateRequest.getNotebookId())
+                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        return noteCreateRequest.updateNoteEntity(originalNote, whiskey, noteBook);
+    }
+
+    @Transactional
+    public void deleteNote(
+            Long noteId,
+            UserDto userDto
+    ) {
+        checkNoteWriterByNoteId(noteId, userDto);
+        deleteNoteImages(noteId);
+        noteRepository.deleteNoteById(noteId);
+    }
+
+    private void checkNoteWriter(Note note, UserDto userDto){
+        if(!note.getWriter().getUsername().equals(userDto.getUsername())){
+            throw new GeneralException(ErrorCode.FORBIDDEN);
+        }
     }
 }

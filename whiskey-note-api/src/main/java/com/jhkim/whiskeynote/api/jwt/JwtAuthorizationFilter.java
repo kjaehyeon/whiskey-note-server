@@ -1,5 +1,6 @@
 package com.jhkim.whiskeynote.api.jwt;
 
+import com.jhkim.whiskeynote.core.dto.UserDto;
 import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
@@ -49,9 +50,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if(username != null){
             User user = userRepository.findUserByUsername(username)
                     .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
-
             return new UsernamePasswordAuthenticationToken(
-                    user, //principal,
+                    UserDto.fromEntity(user), //principal,
                     null,
                     user.getAuthorities()
             );

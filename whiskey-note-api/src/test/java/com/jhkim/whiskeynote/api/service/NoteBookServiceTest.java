@@ -1,15 +1,15 @@
 package com.jhkim.whiskeynote.api.service;
 
-import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDetailResponse;
+import com.jhkim.whiskeynote.core.dto.UserDto;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
-import com.jhkim.whiskeynote.core.repository.NoteRepository;
+import com.jhkim.whiskeynote.core.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,8 @@ import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 
 @DisplayName("[유닛테스트] SERVICE - NOTEBOOK")
@@ -32,7 +33,7 @@ class NoteBookServiceTest {
 
     @InjectMocks private NoteBookService sut;
     @Mock private NoteBookRepository noteBookRepository;
-    @Mock private NoteRepository noteRepository;
+    @Mock private UserRepository userRepository;
 
     //노트북 정상생성
     @DisplayName("[NOTEBOOK][POST] 노트북 생성 - 정상적인 데이터 & 정상 생성")
@@ -41,12 +42,18 @@ class NoteBookServiceTest {
         //Given
         NoteBookCreateRequest noteBookCreateRequest = createNormalNoteBookCreateRequest("notebook 1");
         User user = createUser("user1");
+        UserDto userDto = UserDto.fromEntity(user);
         NoteBook noteBook = noteBookCreateRequest.toEntity(user);
-        given(noteBookRepository.findNoteBookByTitleAndWriter("notebook 1", user)).willReturn(Optional.empty());
-        given(noteBookRepository.save(noteBook)).willReturn(noteBook);
+
+        given(userRepository.findUserByUsername(userDto.getUsername()))
+                .willReturn(Optional.of(user));
+        given(noteBookRepository.findNoteBookByTitleAndWriter("notebook 1", user))
+                .willReturn(Optional.empty());
+        given(noteBookRepository.save(noteBook))
+                .willReturn(noteBook);
 
         //When
-        sut.createNoteBook(noteBookCreateRequest, user);
+        sut.createNoteBook(noteBookCreateRequest, userDto);
 
         //Then
         then(noteBookRepository).should().save(noteBook);
@@ -59,11 +66,16 @@ class NoteBookServiceTest {
         //Given
         NoteBookCreateRequest noteBookDto = createNormalNoteBookCreateRequest("notebook1");
         User user = createUser("user1");
+        UserDto userDto = UserDto.fromEntity(user);
+
+        given(userRepository.findUserByUsername(userDto.getUsername()))
+                .willReturn(Optional.of(user));
         given(noteBookRepository.findNoteBookByTitleAndWriter(noteBookDto.getTitle(), user))
                 .willReturn(Optional.of(noteBookDto.toEntity(user)));
-        //When
 
-        Throwable throwable = catchThrowable(() -> sut.createNoteBook(noteBookDto, user));
+        //When
+        Throwable throwable = catchThrowable(() -> sut.createNoteBook(noteBookDto, userDto));
+
         //Then
         then(noteBookRepository).should().findNoteBookByTitleAndWriter(noteBookDto.getTitle(), user);
         assertThat(throwable)
@@ -72,45 +84,28 @@ class NoteBookServiceTest {
                 .getErrorCode()).isEqualTo(ErrorCode.RESOURCE_ALREADY_EXISTS);
     }
 
-    //노트북 생성시 이름이 비어있으면 예외반환 - 클라이언트 단에서 처리할 수 있을 듯
-    /**
-     * 이 아래는 다 권한확인해서 관리자, 주인만 가능한 기능
-     */
-
-    //노트북 정상삭제
-    @DisplayName("[NOTEBOOK][DELETE] 노트북 삭제 - 노트북 정상삭제")
+    //노트북 리스트 조회
+    @DisplayName("[NOTEBOOK][GET] 노트북 목록 조회 - 해당 유저가 가진 노트북의 목록 조회")
     @Test
-    void givenExistNoteBook_whenDeleteNoteBook_thenReturnOk(){
+    void givenUser_whenGetNotebookList_thenReturnListOfNotebook(){
         //Given
-        Long notebookId = 1L;
         User user = createUser("user1");
-        NoteBook noteBook = NoteBook.of("notebook1",user, 1,1,1);
-        given(noteBookRepository.findNoteBookById(notebookId))
+        UserDto userDto = UserDto.fromEntity(user);
+
+        given(noteBookRepository.findNoteBookByWriter_Username(userDto.getUsername()))
                 .willReturn(
-                        Optional.of(noteBook)
+                        List.of(
+                                NoteBook.of("notebook1",null,1,1,1),
+                                NoteBook.of("notebook2",null,1,1,1),
+                                NoteBook.of("notebook3",null,1,1,1)
+                        )
                 );
-        //When
-        sut.deleteNoteBook(1L, user);
-        //Then
-        then(noteBookRepository).should().delete(noteBook);
-    }
 
-    //존재하지 않는 노트북 삭제시 예외 반환
-    @DisplayName("[NOTEBOOK][DELETE] 노트북 삭제 - 존재하지 않는 노트북 삭제")
-    @Test
-    void givenNotExistNotebook_whenDeleteNotebook_thenReturnException(){
-        //Given
-        Long notebookId = 1L;
-        User user = createUser("user1");
-        given(noteBookRepository.findNoteBookById(notebookId))
-                .willReturn(Optional.empty());
         //When
-        Throwable throwable = catchThrowable(() -> sut.deleteNoteBook(notebookId, user));
+        List<NoteBookDetailResponse> list = sut.getNoteBooks(userDto);
 
         //Then
-        assertThat(throwable).isInstanceOf(GeneralException.class);
-        assertThat(((GeneralException)throwable)
-                .getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+        assertThat(list).hasSize(3);
     }
 
     //노트북 정상 수정
@@ -120,20 +115,22 @@ class NoteBookServiceTest {
         //Given
         Long notebook_id = 1L;
         User user = createUser("user1");
+        UserDto userDto = UserDto.fromEntity(user);
         NoteBookCreateRequest noteBookDto = NoteBookCreateRequest.of("new notebook1", 1, 1, 1);
-
         NoteBook originalNotebook = createNoteBook("notebook1", user);
         NoteBook newNotebook = noteBookDto.toEntity(user);
 
+        given(userRepository.findUserByUsername(userDto.getUsername()))
+                .willReturn(Optional.of(user));
         given(noteBookRepository.findNoteBookById(notebook_id))
                 .willReturn(Optional.of(originalNotebook));
         given(noteBookRepository.findNoteBookByTitleAndWriter(newNotebook.getTitle(), user))
                 .willReturn(Optional.empty());
-
-        given(noteBookRepository.save(newNotebook)).willReturn(newNotebook);
+        given(noteBookRepository.save(newNotebook))
+                .willReturn(newNotebook);
 
         //When
-        sut.updateNoteBook(notebook_id, noteBookDto, user);
+        sut.updateNoteBook(notebook_id, noteBookDto, userDto);
 
         //Then
         then(noteBookRepository).should().findNoteBookById(notebook_id);
@@ -148,13 +145,16 @@ class NoteBookServiceTest {
         //Given
         Long notExistNotebookId = 1L;
         User user = createUser("user1");
+        UserDto userDto = UserDto.fromEntity(user);
         NoteBookCreateRequest notExistNotebookDto = NoteBookCreateRequest.of("not exist notebook", 1, 1, 1);
 
+        given(userRepository.findUserByUsername(userDto.getUsername()))
+                .willReturn(Optional.of(user));
         given(noteBookRepository.findNoteBookById(notExistNotebookId))
                 .willReturn(Optional.empty());
 
         //When
-        Throwable throwable = catchThrowable(() -> sut.updateNoteBook(notExistNotebookId, notExistNotebookDto, user));
+        Throwable throwable = catchThrowable(() -> sut.updateNoteBook(notExistNotebookId, notExistNotebookDto, userDto));
 
         //Then
         assertThat(throwable).isInstanceOf(GeneralException.class);
@@ -169,15 +169,16 @@ class NoteBookServiceTest {
         //Given
         Long notebook_id = 1L;
         User user = createUser("user1");
+        UserDto userDto = UserDto.fromEntity(user);
         NoteBookCreateRequest duplicated_notebookDto = NoteBookCreateRequest.of("duplicated title", 1, 1, 1);
 
+        given(userRepository.findUserByUsername(userDto.getUsername()))
+                .willReturn(Optional.of(user));
         given(noteBookRepository.findNoteBookByTitleAndWriter(duplicated_notebookDto.getTitle(), user))
-                .willReturn(Optional.of(
-                        NoteBook.of("duplicated title", null,1, 1, 1)
-                ));
+                .willReturn(Optional.of(NoteBook.of("duplicated title", null,1, 1, 1)));
 
         //When
-        Throwable throwable = catchThrowable(() -> sut.updateNoteBook(notebook_id, duplicated_notebookDto, user));
+        Throwable throwable = catchThrowable(() -> sut.updateNoteBook(notebook_id, duplicated_notebookDto, userDto));
 
         //Then
         assertThat(throwable).isInstanceOf(GeneralException.class);
@@ -185,25 +186,47 @@ class NoteBookServiceTest {
                 .getErrorCode()).isEqualTo(ErrorCode.RESOURCE_ALREADY_EXISTS);
     }
 
-    //노트북 수정시 이름 비어있으면 예외 반환 - 클라이언트 단에서 처리할 수 있을 듯
-
-    //노트북 리스트 조회
-    @DisplayName("[NOTEBOOK][GET] 노트북 목록 조회 - 해당 유저가 가진 노트북의 목록 조회")
+    //노트북 정상삭제
+    @DisplayName("[NOTEBOOK][DELETE] 노트북 삭제 - 노트북 정상삭제")
     @Test
-    void givenUser_whenGetNotebookList_thenReturnListOfNotebook(){
+    void givenExistNoteBook_whenDeleteNoteBook_thenReturnOk(){
         //Given
+        Long notebookId = 1L;
         User user = createUser("user1");
-        given(noteBookRepository.findNoteBookByWriter(user)).willReturn(
-                List.of(
-                        NoteBook.of("notebook1",null,1,1,1),
-                        NoteBook.of("notebook2",null,1,1,1),
-                        NoteBook.of("notebook3",null,1,1,1)
-                )
-        );
+        UserDto userDto = UserDto.fromEntity(user);
+        NoteBook noteBook = NoteBook.of("notebook1",user, 1,1,1);
+
+        given(userRepository.findUserByUsername(userDto.getUsername()))
+                .willReturn(Optional.of(user));
+        given(noteBookRepository.findNoteBookById(notebookId))
+                .willReturn(Optional.of(noteBook));
+
         //When
-        List<NoteBookDetailResponse> list = sut.getNoteBooks(user);
+        sut.deleteNoteBook(1L, userDto);
+
         //Then
-        assertThat(list).hasSize(3);
+        then(noteBookRepository).should().delete(noteBook);
+    }
+
+    //존재하지 않는 노트북 삭제시 예외 반환
+    @DisplayName("[NOTEBOOK][DELETE] 노트북 삭제 - 존재하지 않는 노트북 삭제")
+    @Test
+    void givenNotExistNotebook_whenDeleteNotebook_thenReturnException(){
+        //Given
+        Long notebookId = 1L;
+        User user = createUser("user1");
+        UserDto userDto = UserDto.fromEntity(user);
+
+        given(noteBookRepository.findNoteBookById(notebookId))
+                .willReturn(Optional.empty());
+
+        //When
+        Throwable throwable = catchThrowable(() -> sut.deleteNoteBook(notebookId, userDto));
+
+        //Then
+        assertThat(throwable).isInstanceOf(GeneralException.class);
+        assertThat(((GeneralException)throwable)
+                .getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
     }
 
     private Note createNote(
@@ -220,6 +243,9 @@ class NoteBookServiceTest {
     }
     private User createUser(String username){
         return User.of(username ,"password1","user1@email.com","ROLE_USER", null);
+    }
+    private UserDto createUserDto(String username){
+        return UserDto.of(1l, username);
     }
     private NoteBook createNoteBook(String title, User user){
         return NoteBook.of(title, user, 1,1,1);

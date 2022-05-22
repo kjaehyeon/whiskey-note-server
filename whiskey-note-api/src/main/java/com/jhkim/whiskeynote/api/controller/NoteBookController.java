@@ -1,10 +1,9 @@
 package com.jhkim.whiskeynote.api.controller;
 
-import com.jhkim.whiskeynote.api.dto.note.NoteDetailResponse;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.api.service.NoteBookService;
-import com.jhkim.whiskeynote.core.entity.User;
+import com.jhkim.whiskeynote.core.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,37 +24,37 @@ public class NoteBookController {
     @PostMapping
     public ResponseEntity<Void> createNoteBook(
            @Valid @RequestBody NoteBookCreateRequest noteBookDto,
-           User user
+           UserDto userDto
     ){
 
-        noteBookService.createNoteBook(noteBookDto,user);
+        noteBookService.createNoteBook(noteBookDto, userDto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<NoteBookDetailResponse>> getNoteBooks(
+            UserDto userDto
+    ){
+        return new ResponseEntity<>(noteBookService.getNoteBooks(userDto), HttpStatus.OK);
     }
 
     @PutMapping("/{notebookId}")
     public ResponseEntity<Void> updateNoteBook(
             @Valid @RequestBody NoteBookCreateRequest noteBookDto,
             @PathVariable Long notebookId,
-            User user
+            UserDto userDto
     ){
-        noteBookService.updateNoteBook(notebookId,noteBookDto, user);
+        noteBookService.updateNoteBook(notebookId,noteBookDto, userDto);
 
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<List<NoteBookDetailResponse>> getNoteBooks(
-        User user
-    ){
-        return new ResponseEntity<>(noteBookService.getNoteBooks(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/{notebookId}")
     public ResponseEntity<Void> deleteNoteBook(
             @PathVariable Long notebookId,
-            User user
+            UserDto userDto
     ){
-        noteBookService.deleteNoteBook(notebookId, user);
+        noteBookService.deleteNoteBook(notebookId, userDto);
         return ResponseEntity.ok().build();
     }
 

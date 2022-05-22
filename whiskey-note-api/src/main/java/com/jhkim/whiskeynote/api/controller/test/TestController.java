@@ -1,6 +1,6 @@
 package com.jhkim.whiskeynote.api.controller.test;
 
-import com.jhkim.whiskeynote.core.entity.User;
+import com.jhkim.whiskeynote.core.dto.UserDto;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @GetMapping("/jwt")
     public ResponseEntity<Void> jwtTest(
-            User user
+            UserDto userDto
     ){
         return ResponseEntity.ok().build();
     }
