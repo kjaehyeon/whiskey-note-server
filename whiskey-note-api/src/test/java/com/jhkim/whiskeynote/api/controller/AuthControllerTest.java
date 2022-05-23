@@ -26,25 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 class AuthControllerTest {
-    private final MockMvc mvc;
-    private final ObjectMapper mapper;
-    private final UserRepository userRepository;
-    private final DatabaseCleanup databaseCleanup;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired private MockMvc mvc;
+    @Autowired private ObjectMapper mapper;
+    @Autowired private UserRepository userRepository;
+    @Autowired private DatabaseCleanup databaseCleanup;
+    @Autowired private PasswordEncoder passwordEncoder;
 
-    public AuthControllerTest(
-            @Autowired MockMvc mvc,
-            @Autowired ObjectMapper mapper,
-            @Autowired UserRepository userRepository,
-            @Autowired DatabaseCleanup databaseCleanup,
-            @Autowired PasswordEncoder passwordEncoder
-    ){
-        this.mvc = mvc;
-        this.mapper = mapper;
-        this.userRepository = userRepository;
-        this.databaseCleanup = databaseCleanup;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @BeforeEach
     void set_up(){

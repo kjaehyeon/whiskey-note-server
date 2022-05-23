@@ -45,10 +45,8 @@ public class NoteServiceTest {
 
     @InjectMocks private NoteService sut;
     @Mock private NoteRepository noteRepository;
-    @Mock private NoteRepositoryCustom noteRepositoryCustom;
     @Mock private NoteBookRepository noteBookRepository;
     @Mock private NoteImageRepository noteImageRepository;
-    @Mock private NoteImageRepositoryCustom noteImageRepositoryCustom;
     @Mock private UserRepository userRepository;
     @Mock private WhiskeyRepository whiskeyRepository;
     @Mock private AwsS3Service awsS3Service;
@@ -234,6 +232,9 @@ public class NoteServiceTest {
 
     }
 
+    //TODO
+    //자신이 주인이 아닌 노트북에 노트를 생성하려고 할 경우
+
     /**
      * getNote()
      */
@@ -248,7 +249,7 @@ public class NoteServiceTest {
         NoteBook noteBook = createNoteBook("note1",user);
         Note note = createNormalNote(user, whiskey, noteBook);
 
-        given(noteRepositoryCustom.findNoteById(noteId))
+        given(noteRepository.findNoteById(noteId))
                 .willReturn(Optional.of(note));
         given(noteImageRepository.findNoteImageByNote_Id(noteId))
                 .willReturn(List.of(NoteImage.of(note, urls.get(0)), NoteImage.of(note, urls.get(1))));
@@ -266,7 +267,7 @@ public class NoteServiceTest {
         //Given
         Long noteId = 1l;
 
-        given(noteRepositoryCustom.findNoteById(noteId))
+        given(noteRepository.findNoteById(noteId))
                 .willReturn(Optional.empty());
 
         //When
@@ -507,6 +508,9 @@ public class NoteServiceTest {
                 .isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
     }
 
+    //TODO
+    //자신이 주인이 아닌 노트북에 노트를 추가하려고 할 경우
+
     /**
      * deleteNote()
      */
@@ -557,7 +561,7 @@ public class NoteServiceTest {
         //Then
         then(awsS3Service).should(times(noteImages.size())).deleteImage(any());
         then(noteRepository).should().deleteNoteById(noteId);
-        then(noteImageRepositoryCustom).should().deleteAllByNote_id(noteId);
+        then(noteImageRepository).should().deleteAllByNote_id(noteId);
     }
 
     @DisplayName("[NOTE][DELETE] 노트 삭제 - 노트 작성자가 아닌 유저가 노트 삭제 요청")

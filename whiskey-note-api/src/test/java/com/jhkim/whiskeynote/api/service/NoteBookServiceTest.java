@@ -1,7 +1,7 @@
 package com.jhkim.whiskeynote.api.service;
 
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
-import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDetailResponse;
+import com.jhkim.whiskeynote.core.dto.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.core.dto.UserDto;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
@@ -10,6 +10,7 @@ import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
+import org.assertj.core.data.Index;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -91,21 +92,24 @@ class NoteBookServiceTest {
         //Given
         User user = createUser("user1");
         UserDto userDto = UserDto.fromEntity(user);
+        List<NoteBookDetailResponse> noteBooks= List.of(
+                NoteBookDetailResponse.of(1l,"notebook1",1,1,1,2),
+                NoteBookDetailResponse.of(2l,"notebook2",1,1,1,0),
+                NoteBookDetailResponse.of(3l, "notebook3",1,1,1,3)
+        );
 
-        given(noteBookRepository.findNoteBookByWriter_Username(userDto.getUsername()))
-                .willReturn(
-                        List.of(
-                                NoteBook.of("notebook1",null,1,1,1),
-                                NoteBook.of("notebook2",null,1,1,1),
-                                NoteBook.of("notebook3",null,1,1,1)
-                        )
-                );
+        given(noteBookRepository.findNoteBookAndNoteCntByWriterName(userDto.getUsername()))
+                .willReturn(noteBooks);
 
         //When
         List<NoteBookDetailResponse> list = sut.getNoteBooks(userDto);
 
         //Then
         assertThat(list).hasSize(3);
+        assertThat(list)
+                .contains(noteBooks.get(0), Index.atIndex(0))
+                .contains(noteBooks.get(1), Index.atIndex(1))
+                .contains(noteBooks.get(2), Index.atIndex(2));
     }
 
     //노트북 정상 수정

@@ -1,7 +1,7 @@
 package com.jhkim.whiskeynote.api.service;
 
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
-import com.jhkim.whiskeynote.api.dto.notebook.NoteBookDetailResponse;
+import com.jhkim.whiskeynote.core.dto.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.core.dto.UserDto;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
@@ -9,13 +9,13 @@ import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
+import com.jhkim.whiskeynote.core.repository.querydsl.NoteBookRepositoryCustomImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,15 +48,11 @@ public class NoteBookService {
                 .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
     }
 
-    //TODO 해당 노트북에 존재하는 노트 개수도 응답에 추가바람
     @Transactional
     public List<NoteBookDetailResponse> getNoteBooks(
             UserDto userDto
     ){
-        return noteBookRepository.findNoteBookByWriter_Username(userDto.getUsername())
-                .stream()
-                .map(NoteBookDetailResponse::fromEntity)
-                .collect(Collectors.toList());
+        return noteBookRepository.findNoteBookAndNoteCntByWriterName(userDto.getUsername());
     }
 
     @Transactional

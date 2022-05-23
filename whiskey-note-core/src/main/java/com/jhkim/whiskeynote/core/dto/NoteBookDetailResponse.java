@@ -1,16 +1,17 @@
-package com.jhkim.whiskeynote.api.dto.notebook;
+package com.jhkim.whiskeynote.core.dto;
 
 import com.jhkim.whiskeynote.core.entity.NoteBook;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor(staticName = "of")
+@NoArgsConstructor
+@EqualsAndHashCode
 public class NoteBookDetailResponse {
     @NotNull
     private Long notebookId;
@@ -22,15 +23,16 @@ public class NoteBookDetailResponse {
     private Integer green;
     private Integer blue;
 
-    //private Integer page_num;
+    private Integer pageNum;
 
-    public static NoteBookDetailResponse fromEntity(NoteBook noteBook){
+    public static NoteBookDetailResponse fromEntity(NoteBook noteBook, int pageNum){
         return NoteBookDetailResponse.builder()
                 .notebookId(noteBook.getId())
                 .title(noteBook.getTitle())
                 .red(noteBook.getRed())
                 .green(noteBook.getGreen())
                 .blue(noteBook.getBlue())
+                .pageNum(pageNum)
                 .build();
     }
 }

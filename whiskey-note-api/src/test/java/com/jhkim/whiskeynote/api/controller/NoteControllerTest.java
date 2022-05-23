@@ -1,6 +1,7 @@
 package com.jhkim.whiskeynote.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
 import com.jhkim.whiskeynote.core.service.DatabaseCleanup;
 import org.junit.jupiter.api.DisplayName;
@@ -8,9 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("API컨트롤러 - NOTE")
 @AutoConfigureMockMvc
@@ -39,7 +44,7 @@ public class NoteControllerTest {
 
     @DisplayName("[NOTE][POST] 노트 정상 생성")
     @Test
-    void givenNormalNoteCreateRequest_whenCreateNote_thenOk(){
+    void givenNormalNoteCreateRequest_whenCreateNote_thenOk() throws Exception{
 
     }
     //whiskey color가 존재하지 않는 Enum인 경우(이것도 Controller validation 테스트)

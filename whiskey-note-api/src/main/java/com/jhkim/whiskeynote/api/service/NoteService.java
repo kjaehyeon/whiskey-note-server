@@ -25,10 +25,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NoteService {
     private final NoteRepository noteRepository;
-    private final NoteRepositoryCustom noteRepositoryCustom;
     private final NoteBookRepository noteBookRepository;
     private final NoteImageRepository noteImageRepository;
-    private final NoteImageRepositoryCustom noteImageRepositoryCustom;
     private final UserRepository userRepository;
     private final WhiskeyRepository whiskeyRepository;
     private final AwsS3Service awsS3Service;
@@ -80,7 +78,7 @@ public class NoteService {
     public NoteDetailResponse getNote(
             Long noteId
     ) {
-        final Note note = noteRepositoryCustom.findNoteById(noteId)
+        final Note note = noteRepository.findNoteById(noteId)
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
 
         final List<String> imageUrls =
@@ -137,7 +135,7 @@ public class NoteService {
         final List<NoteImage> noteImages = noteImageRepository.findNoteImageByNote_Id(noteId);
         if(!noteImages.isEmpty()){
             noteImages.forEach(noteImage -> awsS3Service.deleteImage(noteImage.getUrl()));
-            noteImageRepositoryCustom.deleteAllByNote_id(noteId);
+            noteImageRepository.deleteAllByNote_id(noteId);
         }
     }
 
