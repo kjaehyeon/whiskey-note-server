@@ -1,11 +1,12 @@
 # whiskey-note-server
 위스키 노트 서버 powered by springboot
 - Description
-i) 위스키 정보를 검색하고, ii) 테이스팅 노트를 작성하고 공유
+ 
+  i) 위스키 정보를 검색하고, ii) 테이스팅 노트를 작성하고 공유
 
 - Stack
 
-BE : Springboot, Spring Security for jwt
+  - BE : Springboot, Spring Security for jwt
 
 DB : Spring Data JPA, Querydsl
 
