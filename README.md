@@ -4,6 +4,7 @@
 i) 위스키 정보를 검색하고, ii) 테이스팅 노트를 작성하고 공유
 
 - Stack
+
 BE : Springboot, Spring Security for jwt
 
 DB : Spring Data JPA, Querydsl
