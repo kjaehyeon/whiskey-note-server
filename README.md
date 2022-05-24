@@ -8,10 +8,10 @@
 
   - BE : Springboot, Spring Security for jwt
 
-DB : Spring Data JPA, Querydsl
+  - DB : Spring Data JPA, Querydsl
 
-Test : Junit5, AssertJ, Mockito
+  - Test : Junit5, AssertJ, Mockito
 
-Cloud : AWS EC2/S3/RDS
+  - Cloud : AWS EC2/S3/RDS
 
-CI/CD : Travis CI/ AWS Codedeploy
+  - CI/CD : Travis CI/ AWS Codedeploy
