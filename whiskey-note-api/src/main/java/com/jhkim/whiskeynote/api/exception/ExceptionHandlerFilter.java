@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,6 +21,7 @@ import java.io.IOException;
 /**
  * JWT토큰 관련 예외 핸들링을 위한 Filter
  */
+@Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
@@ -49,7 +51,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try{
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         }catch (IOException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

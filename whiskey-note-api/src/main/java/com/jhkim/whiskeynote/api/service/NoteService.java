@@ -80,12 +80,15 @@ public class NoteService {
     ) {
         final Note note = noteRepository.findNoteById(noteId)
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+        final List<String> imageUrls = getNoteImageUrls(noteId);
 
-        final List<String> imageUrls =
-                noteImageRepository.findNoteImageByNote_Id(noteId)
-                        .stream().map(NoteImage::getUrl)
-                        .collect(Collectors.toList());
         return NoteDetailResponse.fromEntity(note, imageUrls);
+    }
+
+    private List<String> getNoteImageUrls(Long noteId){
+        return noteImageRepository.findNoteImageByNote_Id(noteId)
+                .stream().map(NoteImage::getUrl)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -99,10 +102,7 @@ public class NoteService {
                 .stream()
                 .map(note -> NoteDetailResponse.fromEntity(
                         note,
-                        noteImageRepository.findNoteImageByNote_Id(note.getId())
-                                .stream()
-                                .map(NoteImage::getUrl)
-                                .collect(Collectors.toList())
+                        getNoteImageUrls(note.getId())
                 )).collect(Collectors.toList());
     }
 

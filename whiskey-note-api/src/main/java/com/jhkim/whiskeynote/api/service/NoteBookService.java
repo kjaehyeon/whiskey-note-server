@@ -1,6 +1,7 @@
 package com.jhkim.whiskeynote.api.service;
 
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookUpdateResponse;
 import com.jhkim.whiskeynote.core.dto.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.core.dto.UserDto;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
@@ -56,7 +57,7 @@ public class NoteBookService {
     }
 
     @Transactional
-    public void updateNoteBook(
+    public NoteBookUpdateResponse updateNoteBook(
             Long notebook_id,
             NoteBookCreateRequest noteBookCreateRequest,
             UserDto userDto
@@ -71,7 +72,9 @@ public class NoteBookService {
 
         checkNotebookWriter(noteBook, user);
 
-        noteBookRepository.save(noteBookCreateRequest.updateEntity(noteBook));
+        return NoteBookUpdateResponse.fromEntity(
+                noteBookRepository.save(noteBookCreateRequest.updateEntity(noteBook))
+        );
     }
 
     private void checkNotebookWriter(NoteBook noteBook, User user){

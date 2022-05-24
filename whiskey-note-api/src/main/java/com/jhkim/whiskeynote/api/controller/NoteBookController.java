@@ -1,6 +1,7 @@
 package com.jhkim.whiskeynote.api.controller;
 
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
+import com.jhkim.whiskeynote.api.dto.notebook.NoteBookUpdateResponse;
 import com.jhkim.whiskeynote.core.dto.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.api.service.NoteBookService;
 import com.jhkim.whiskeynote.core.dto.UserDto;
@@ -39,14 +40,15 @@ public class NoteBookController {
     }
 
     @PutMapping("/{notebookId}")
-    public ResponseEntity<Void> updateNoteBook(
+    public ResponseEntity<NoteBookUpdateResponse> updateNoteBook(
             @Valid @RequestBody NoteBookCreateRequest noteBookCreateRequest,
             @PathVariable Long notebookId,
             UserDto userDto
     ){
-        noteBookService.updateNoteBook(notebookId, noteBookCreateRequest, userDto);
-
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(
+                noteBookService.updateNoteBook(notebookId, noteBookCreateRequest, userDto),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping("/{notebookId}")

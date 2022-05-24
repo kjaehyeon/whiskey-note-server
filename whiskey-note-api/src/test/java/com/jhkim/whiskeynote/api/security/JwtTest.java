@@ -36,6 +36,8 @@ public class JwtTest {
     private final JwtUtils jwtUtils;
     private final JwtKey jwtKey;
 
+    private static User user;
+
     public JwtTest(
             @Autowired MockMvc mvc,
             @Autowired JwtUtils jwtUtils,
@@ -51,23 +53,20 @@ public class JwtTest {
             @Autowired UserRepository userRepository,
             @Autowired PasswordEncoder passwordEncoder
     ){
-        userRepository.save(User.builder()
-                .username("user1")
+        user = User.builder()
+                .username("user2")
                 .password(passwordEncoder.encode("password1"))
                 .email("user1@email.com")
                 .authority("ROLE_USER")
-                .build()
-        );
+                .build();
+
+        userRepository.save(user);
     }
 
     @DisplayName("[JWT] 정상 토큰으로 요청")
     @Test
     void givenNormalJwtToken_whenRequest_thenOk() throws Exception{
         //Given
-        User user = User.builder()
-                .username("user1")
-                .password("password1")
-                .build();
         String NormalToken = jwtUtils.createToken(user);
         //When & Then
         mvc.perform(
@@ -81,10 +80,6 @@ public class JwtTest {
     @Test
     void givenExpiredJwtToken_whenRequest_thenException() throws Exception{
         //Given
-        User user = User.builder()
-                .username("user1")
-                .password("password1")
-                .build();
         String expiredToken = createExpiredToken(user);
         //When & Then
         mvc.perform(
@@ -101,10 +96,6 @@ public class JwtTest {
     @Test
     void givenInvalidJwtToken_whenRequest_thenException() throws Exception{
         //Given
-        User user = User.builder()
-                .username("user1")
-                .password("password1")
-                .build();
         String invalidToken = jwtUtils.createToken(user) + "Invalid String";
         //When & Then
         mvc.perform(
