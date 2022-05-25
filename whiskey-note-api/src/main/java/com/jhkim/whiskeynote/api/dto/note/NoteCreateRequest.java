@@ -7,10 +7,12 @@ import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -22,12 +24,14 @@ public class NoteCreateRequest {
     private Long notebookId;
     private Long whiskeyId;
 
-    @NotNull
+    @NotBlank
     private String whiskeyName;
     private String distiller;
     private Integer price;
-    @NotNull
+
+    @Range(min=0, max=5)
     private Float rating;
+    @Min(value = 0)
     private Integer age;
     private String nose;
     private String taste;
@@ -36,18 +40,31 @@ public class NoteCreateRequest {
     @NotNull
     private String description;
 
-    private String color;
+    private WhiskeyColor whiskeyColor;
+
+    @Range(min=0, max=100)
     private Integer smokey;
+    @Range(min=0, max=100)
     private Integer peaty;
+    @Range(min=0, max=100)
     private Integer herbal;
+    @Range(min=0, max=100)
     private Integer briny;
+    @Range(min=0, max=100)
     private Integer vanilla;
+    @Range(min=0, max=100)
     private Integer fruity;
+    @Range(min=0, max=100)
     private Integer floral;
+    @Range(min=0, max=100)
     private Integer woody;
+    @Range(min=0, max=100)
     private Integer rich;
+    @Range(min=0, max=100)
     private Integer spicy;
+    @Range(min=0, max=100)
     private Integer sweet;
+    @Range(min=0, max=100)
     private Integer salty;
 
     private List<MultipartFile> images;
@@ -70,7 +87,7 @@ public class NoteCreateRequest {
                 .taste(taste)
                 .finish(finish)
                 .description(description)
-                .color(WhiskeyColor.valueOf(color))
+                .color(whiskeyColor)
                 .smokey(smokey)
                 .peaty(peaty)
                 .herbal(herbal)
@@ -102,7 +119,7 @@ public class NoteCreateRequest {
         if(taste != null) note.setTaste(taste);
         if(finish != null) note.setFinish(finish);
         if(description != null) note.setDescription(description);
-        if(color != null) note.setColor(WhiskeyColor.valueOf(color));
+        if(whiskeyColor != null) note.setColor(whiskeyColor);
         if(smokey != null) note.setSmokey(smokey);
         if(peaty != null) note.setPeaty(peaty);
         if(herbal != null) note.setHerbal(herbal);

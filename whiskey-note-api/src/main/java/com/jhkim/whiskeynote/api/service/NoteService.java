@@ -8,8 +8,6 @@ import com.jhkim.whiskeynote.core.entity.*;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import com.jhkim.whiskeynote.core.repository.*;
-import com.jhkim.whiskeynote.core.repository.querydsl.NoteImageRepositoryCustom;
-import com.jhkim.whiskeynote.core.repository.querydsl.NoteRepositoryCustom;
 import com.jhkim.whiskeynote.core.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

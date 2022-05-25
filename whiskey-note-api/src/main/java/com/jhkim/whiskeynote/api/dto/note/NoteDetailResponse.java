@@ -3,8 +3,6 @@ package com.jhkim.whiskeynote.api.dto.note;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
 import com.jhkim.whiskeynote.core.constant.WhiskeyColor;
 import com.jhkim.whiskeynote.core.entity.Note;
-import com.jhkim.whiskeynote.core.entity.User;
-import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -27,7 +25,7 @@ public class NoteDetailResponse {
     private String whiskeyName;
     private String distiller;
     private Integer price;
-    private String color;
+    private WhiskeyColor whiskeyColor;
 
     @NotNull
     private Float rating;
@@ -38,7 +36,6 @@ public class NoteDetailResponse {
 
     @NotNull
     private String description;
-    private Integer whiskeyColor;
 
     private Integer smokey;
     private Integer peaty;
@@ -73,7 +70,7 @@ public class NoteDetailResponse {
                 .taste(note.getTaste())
                 .finish(note.getFinish())
                 .description(note.getDescription())
-                .color(note.getColor().getName_ko())
+                .whiskeyColor(note.getColor())
                 .smokey(note.getSmokey())
                 .peaty(note.getPeaty())
                 .herbal(note.getHerbal())

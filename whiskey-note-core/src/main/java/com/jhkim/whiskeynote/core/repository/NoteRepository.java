@@ -2,6 +2,7 @@ package com.jhkim.whiskeynote.core.repository;
 
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
+import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.repository.querydsl.NoteRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,6 +17,7 @@ public interface NoteRepository extends
 {
     List<Note> findAllByNotebook(NoteBook noteBook);
     Optional<Note> findNoteById(Long noteId);
+    List<Note> findAllByWriter(User writer);
 
     @Modifying
     @Query("DELETE FROM Note WHERE id = ?1")

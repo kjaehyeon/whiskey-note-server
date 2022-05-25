@@ -16,6 +16,7 @@ public enum ErrorCode {
     RESOURCE_ALREADY_EXISTS(10003, HttpStatus.CONFLICT, "Requested resource is already exists"),
     FILE_UPLOAD_SIZE_EXCEEDED(10004, HttpStatus.BAD_REQUEST, "File upload size exceeded"),
     INVALID_FILE_FORMAT(10005, HttpStatus.BAD_REQUEST, "Invalid file format"),
+    ENUM_TYPE_MISMATCH(10006, HttpStatus.BAD_REQUEST, "Enum type mismatch"),
 
     //General Server Error
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),

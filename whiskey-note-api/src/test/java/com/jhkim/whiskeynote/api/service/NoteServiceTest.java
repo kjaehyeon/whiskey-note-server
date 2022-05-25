@@ -35,7 +35,6 @@ import static org.mockito.Mockito.times;
 @DisplayName("[유닛테스트] SERVICE - NOTE")
 @ExtendWith(MockitoExtension.class)
 public class NoteServiceTest {
-
     @InjectMocks private NoteService sut;
     @Mock private NoteRepository noteRepository;
     @Mock private NoteBookRepository noteBookRepository;
@@ -59,7 +58,7 @@ public class NoteServiceTest {
                 createNormalNoteCreateRequest(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(2)
                 );
         List<String> urls = List.of("url1", "url2");
@@ -102,7 +101,7 @@ public class NoteServiceTest {
                 createNormalNoteCreateRequest(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(0)
                 );
         List<String> urls = List.of();
@@ -140,7 +139,7 @@ public class NoteServiceTest {
                 createNoteCreateRequestWithNoWhiskeyId(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(0)
                 );
         List<String> urls = List.of();
@@ -176,7 +175,7 @@ public class NoteServiceTest {
                 createNormalNoteCreateRequest(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(0)
                 );
 
@@ -205,7 +204,7 @@ public class NoteServiceTest {
                 createNoteCreateRequestWithNoWhiskeyId(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(0)
                 );
 
@@ -352,7 +351,7 @@ public class NoteServiceTest {
                 createNormalNoteCreateRequest(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(2)
                 );
         List<String> urls = List.of("url1", "url2");
@@ -388,7 +387,7 @@ public class NoteServiceTest {
                 createNormalNoteCreateRequest(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(2)
                 );
 
@@ -420,7 +419,7 @@ public class NoteServiceTest {
                 createNormalNoteCreateRequest(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(2)
                 );
 
@@ -450,7 +449,7 @@ public class NoteServiceTest {
                 createNormalNoteCreateRequest(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(2)
                 );
 
@@ -481,7 +480,7 @@ public class NoteServiceTest {
                 createNormalNoteCreateRequest(
                         whiskey,
                         noteBook,
-                        WhiskeyColor.AMBER.name(),
+                        WhiskeyColor.AMBER,
                         createMultiFiles(2)
                 );
 
@@ -607,7 +606,7 @@ public class NoteServiceTest {
     private NoteCreateRequest createNormalNoteCreateRequest(
             Whiskey whiskey,
             NoteBook noteBook,
-            String whiskeyColorString,
+            WhiskeyColor whiskeyColor,
             List<MultipartFile> multipartFiles
     ){
         return NoteCreateRequest.builder()
@@ -622,7 +621,7 @@ public class NoteServiceTest {
                 .taste("taste")
                 .finish("finish")
                 .description("description")
-                .color(whiskeyColorString)
+                .whiskeyColor(whiskeyColor)
                 .smokey(1)
                 .peaty(2)
                 .herbal(3)
@@ -641,7 +640,7 @@ public class NoteServiceTest {
     private NoteCreateRequest createNoteCreateRequestWithNoWhiskeyId(
             Whiskey whiskey,
             NoteBook noteBook,
-            String whiskeyColorString,
+            WhiskeyColor whiskeyColor,
             List<MultipartFile> multipartFiles
     ){
         return NoteCreateRequest.builder()
@@ -656,7 +655,7 @@ public class NoteServiceTest {
                 .taste("taste")
                 .finish("finish")
                 .description("description")
-                .color(whiskeyColorString)
+                .whiskeyColor(whiskeyColor)
                 .smokey(1)
                 .peaty(2)
                 .herbal(3)
@@ -743,7 +742,7 @@ public class NoteServiceTest {
     }
     private List<MultipartFile> createMultiFiles(Integer num){
         List<MultipartFile> multipartFiles = new ArrayList<>();
-        final String fileName = "testImage";
+        final String fileName = "testImage1";
         final String contentType = "png";
         final String filePath = "src/test/resources/testImage/"+fileName+"."+contentType;
         for(int i = 0; i < num; i++){
