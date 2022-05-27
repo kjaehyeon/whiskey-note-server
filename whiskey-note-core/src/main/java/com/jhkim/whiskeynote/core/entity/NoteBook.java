@@ -3,6 +3,7 @@ package com.jhkim.whiskeynote.core.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import javax.persistence.*;
 public class NoteBook extends BaseEntity{
     private String title;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "writer_id")
     private User writer;
 

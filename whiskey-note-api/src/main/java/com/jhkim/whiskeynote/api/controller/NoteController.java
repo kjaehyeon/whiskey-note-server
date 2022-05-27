@@ -40,7 +40,7 @@ public class NoteController {
     }
     @GetMapping
     public ResponseEntity<List<NoteDetailResponse>> getNotes(
-            @RequestParam("notebook") Long notebookId
+            @RequestParam("notebookId") Long notebookId
     ){
 
         return new ResponseEntity<>(

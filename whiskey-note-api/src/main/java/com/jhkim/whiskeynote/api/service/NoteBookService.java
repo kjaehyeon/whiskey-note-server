@@ -9,6 +9,7 @@ import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
+import com.jhkim.whiskeynote.core.repository.NoteImageRepository;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
 import com.jhkim.whiskeynote.core.repository.querydsl.NoteBookRepositoryCustomImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.List;
 public class NoteBookService {
     private final NoteBookRepository noteBookRepository;
     private final UserRepository userRepository;
+    private final NoteImageRepository noteImageRepository;
 
     @Transactional
     public void createNoteBook(
@@ -84,6 +86,7 @@ public class NoteBookService {
         }
     }
 
+    //TODO 속해있는 노트와 노트이미지, 업로드된 이미지까지 모두 삭제 하기
     @Transactional
     public void deleteNoteBook(
             Long notebookId,

@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor(staticName = "of")
 @Entity
 public class NoteImage extends BaseEntity{
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "note_id")
     private Note note;
 

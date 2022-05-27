@@ -5,13 +5,17 @@ import com.amazonaws.SdkClientException;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+
+import javax.validation.ValidationException;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -26,9 +30,12 @@ public class GlobalExceptionHandler {
     }
 
     //validation fail
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(value = {
+            BindException.class,
+            MethodArgumentNotValidException.class
+    })
     public ResponseEntity<ErrorResponse> handle(
-            MethodArgumentNotValidException ex
+            BindException ex
     ){
         return makeErrorResponse(ErrorCode.VALIDATION_ERROR);
     }
@@ -52,6 +59,13 @@ public class GlobalExceptionHandler {
         return makeErrorResponse(ErrorCode.AWS_S3_ERROR);
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> missingQueryParam(
+            Exception e
+    ){
+        return makeErrorResponse(ErrorCode.MISSING_QUERY_PARAM);
+    }
+
     @ExceptionHandler(Exception.class) // 나머지 모든 예외를 처리하는 핸들러
     public ResponseEntity<ErrorResponse> handleException(
             Exception e
@@ -59,7 +73,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 new ErrorResponse(
                         ErrorCode.INTERNAL_ERROR.getCode(),
-                        e.getMessage()
+                        e.getMessage(),
+                        LocalDateTime.now()
                 ),
                 ErrorCode.INTERNAL_ERROR.getHttpStatus()
         );
@@ -69,7 +84,7 @@ public class GlobalExceptionHandler {
             ErrorCode errorCode
     ){
         return new ResponseEntity<>(
-                new ErrorResponse(errorCode.getCode(), errorCode.getMessage()),
+                new ErrorResponse(errorCode.getCode(), errorCode.getMessage(), LocalDateTime.now()),
                 errorCode.getHttpStatus()
         );
     }
@@ -77,5 +92,6 @@ public class GlobalExceptionHandler {
     private static class ErrorResponse{
         private final Integer code;
         private final String message;
+        private final LocalDateTime timestamp;
     }
 }

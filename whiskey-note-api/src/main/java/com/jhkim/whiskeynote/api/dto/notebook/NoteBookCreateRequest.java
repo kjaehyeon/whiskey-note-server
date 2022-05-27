@@ -1,5 +1,6 @@
 package com.jhkim.whiskeynote.api.dto.notebook;
 
+import com.jhkim.whiskeynote.core.constant.WhiskeyColor;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
 import com.jhkim.whiskeynote.core.entity.User;
 import lombok.AllArgsConstructor;

@@ -12,11 +12,12 @@ public enum ErrorCode {
     //General Client Error
     BAD_REQUEST(10000, HttpStatus.BAD_REQUEST, "Bad request"),
     VALIDATION_ERROR(10001, HttpStatus.BAD_REQUEST, "Validation error"),
-    RESOURCE_NOT_FOUND(10002, HttpStatus.NOT_FOUND, "Requested resource is not found"),
+    RESOURCE_NOT_FOUND(10002, HttpStatus.BAD_REQUEST, "Requested resource is not found"),
     RESOURCE_ALREADY_EXISTS(10003, HttpStatus.CONFLICT, "Requested resource is already exists"),
     FILE_UPLOAD_SIZE_EXCEEDED(10004, HttpStatus.BAD_REQUEST, "File upload size exceeded"),
     INVALID_FILE_FORMAT(10005, HttpStatus.BAD_REQUEST, "Invalid file format"),
     ENUM_TYPE_MISMATCH(10006, HttpStatus.BAD_REQUEST, "Enum type mismatch"),
+    MISSING_QUERY_PARAM(10007, HttpStatus.BAD_REQUEST, "Query parameters are required"),
 
     //General Server Error
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),

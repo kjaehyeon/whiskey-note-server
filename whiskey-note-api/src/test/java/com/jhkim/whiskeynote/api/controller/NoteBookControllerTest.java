@@ -8,9 +8,11 @@ import com.jhkim.whiskeynote.api.jwt.JwtUtils;
 import com.jhkim.whiskeynote.core.dto.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
+import com.jhkim.whiskeynote.core.entity.NoteImage;
 import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
+import com.jhkim.whiskeynote.core.repository.NoteImageRepository;
 import com.jhkim.whiskeynote.core.repository.NoteRepository;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
 import com.jhkim.whiskeynote.core.service.DatabaseCleanup;
@@ -30,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@DisplayName("API컨트롤러 - NOTEBOOK")
+@DisplayName("[통합테스트] CONTROLLER - NOTEBOOK")
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
@@ -42,6 +44,7 @@ class NoteBookControllerTest {
     @Autowired private UserRepository userRepository;
     @Autowired private NoteBookRepository noteBookRepository;
     @Autowired private NoteRepository noteRepository;
+    @Autowired private NoteImageRepository noteImageRepository;
 
     private User user;
     private String token;
@@ -177,8 +180,8 @@ class NoteBookControllerTest {
     private NoteBook createNoteBook(String title, User user){
         return noteBookRepository.save(NoteBook.of(title, user, 1,1,1));
     }
-    private void createNote(NoteBook noteBook, User user){
-        noteRepository.save(
+    private Note createNote(NoteBook noteBook, User user){
+        return noteRepository.save(
                 Note.builder()
                         .notebook(noteBook)
                         .writer(user)
@@ -238,7 +241,12 @@ class NoteBookControllerTest {
     void givenNormal_whenDeleteNotebook_thenReturnOk() throws Exception{
         //Given
         NoteBook noteBookToDelete = createNoteBook("notebook to delete", user);
-
+//        Note savedNote = createNote(noteBookToDelete, user);
+//        List<NoteImage> noteImages = List.of(
+//                NoteImage.of(savedNote, "imageUrl1"),
+//                NoteImage.of(savedNote, "imageUrl2")
+//        );
+//        noteImageRepository.saveAll(noteImages);
         //When & Then
         mvc.perform(
                 delete("/api/notebook/{notebookId}", noteBookToDelete.getId())
@@ -248,6 +256,10 @@ class NoteBookControllerTest {
 
         assertThat(noteBookRepository.findNoteBookByWriter_Username(user.getUsername()))
                 .doesNotContain(noteBookToDelete);
+//        assertThat(noteRepository.findNoteById(savedNote.getId()))
+//                .isEmpty();
+//        assertThat(noteImageRepository.findNoteImageByNote_Id(savedNote.getId()))
+//                .hasSize(0);
     }
 
 }

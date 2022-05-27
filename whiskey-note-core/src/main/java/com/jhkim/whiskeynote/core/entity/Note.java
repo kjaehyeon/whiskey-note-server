@@ -16,7 +16,7 @@ import javax.persistence.*;
 @ToString
 public class Note extends BaseEntity{
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "note_book_id")
     private NoteBook notebook;
 

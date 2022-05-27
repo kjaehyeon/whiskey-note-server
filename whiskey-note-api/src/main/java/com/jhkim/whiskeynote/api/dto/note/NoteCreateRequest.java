@@ -8,6 +8,7 @@ import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor(staticName = "of")
 public class NoteCreateRequest {

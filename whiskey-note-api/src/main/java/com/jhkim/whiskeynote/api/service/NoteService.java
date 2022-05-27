@@ -129,14 +129,6 @@ public class NoteService {
         checkNoteWriter(note, userDto);
     }
 
-    private void deleteNoteImages(Long noteId){
-        final List<NoteImage> noteImages = noteImageRepository.findNoteImageByNote_Id(noteId);
-        if(!noteImages.isEmpty()){
-            noteImages.forEach(noteImage -> awsS3Service.deleteImage(noteImage.getUrl()));
-            noteImageRepository.deleteAllByNote_id(noteId);
-        }
-    }
-
     private Note updateOriginalNote(
             Note originalNote,
             NoteCreateRequest noteCreateRequest
@@ -147,6 +139,14 @@ public class NoteService {
                 .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
 
         return noteCreateRequest.updateNoteEntity(originalNote, whiskey, noteBook);
+    }
+
+    private void deleteNoteImages(Long noteId){
+        final List<NoteImage> noteImages = noteImageRepository.findNoteImageByNote_Id(noteId);
+        if(!noteImages.isEmpty()){
+            noteImages.forEach(noteImage -> awsS3Service.deleteImage(noteImage.getUrl()));
+            noteImageRepository.deleteAllByNote_id(noteId);
+        }
     }
 
     @Transactional
