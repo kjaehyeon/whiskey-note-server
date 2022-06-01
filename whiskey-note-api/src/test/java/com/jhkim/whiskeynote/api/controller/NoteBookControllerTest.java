@@ -5,6 +5,7 @@ import com.jhkim.whiskeynote.api.dto.notebook.NoteBookCreateRequest;
 import com.jhkim.whiskeynote.api.dto.notebook.NoteBookUpdateResponse;
 import com.jhkim.whiskeynote.api.jwt.JwtProperties;
 import com.jhkim.whiskeynote.api.jwt.JwtUtils;
+import com.jhkim.whiskeynote.core.constant.S3Path;
 import com.jhkim.whiskeynote.core.dto.NoteBookDetailResponse;
 import com.jhkim.whiskeynote.core.entity.Note;
 import com.jhkim.whiskeynote.core.entity.NoteBook;
@@ -15,6 +16,7 @@ import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
 import com.jhkim.whiskeynote.core.repository.NoteImageRepository;
 import com.jhkim.whiskeynote.core.repository.NoteRepository;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
+import com.jhkim.whiskeynote.core.service.AwsS3Service;
 import com.jhkim.whiskeynote.core.service.DatabaseCleanup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,6 +48,8 @@ class NoteBookControllerTest {
     @Autowired private NoteBookRepository noteBookRepository;
     @Autowired private NoteRepository noteRepository;
     @Autowired private NoteImageRepository noteImageRepository;
+
+    @MockBean private AwsS3Service awsS3Service;
 
     private User user;
     private String token;
@@ -241,12 +246,13 @@ class NoteBookControllerTest {
     void givenNormal_whenDeleteNotebook_thenReturnOk() throws Exception{
         //Given
         NoteBook noteBookToDelete = createNoteBook("notebook to delete", user);
-//        Note savedNote = createNote(noteBookToDelete, user);
-//        List<NoteImage> noteImages = List.of(
-//                NoteImage.of(savedNote, "imageUrl1"),
-//                NoteImage.of(savedNote, "imageUrl2")
-//        );
-//        noteImageRepository.saveAll(noteImages);
+        Note savedNote = createNote(noteBookToDelete, user);
+        List<NoteImage> noteImages = List.of(
+                NoteImage.of(savedNote, S3Path.NOTE_IMAGE.getFolderName() + "/imageUrl1"),
+                NoteImage.of(savedNote, S3Path.NOTE_IMAGE.getFolderName() + "/imageUrl2")
+        );
+        noteImageRepository.saveAll(noteImages);
+
         //When & Then
         mvc.perform(
                 delete("/api/notebook/{notebookId}", noteBookToDelete.getId())
@@ -256,10 +262,10 @@ class NoteBookControllerTest {
 
         assertThat(noteBookRepository.findNoteBookByWriter_Username(user.getUsername()))
                 .doesNotContain(noteBookToDelete);
-//        assertThat(noteRepository.findNoteById(savedNote.getId()))
-//                .isEmpty();
-//        assertThat(noteImageRepository.findNoteImageByNote_Id(savedNote.getId()))
-//                .hasSize(0);
+        assertThat(noteRepository.findNoteById(savedNote.getId()))
+                .isEmpty();
+        assertThat(noteImageRepository.findNoteImageByNote_Id(savedNote.getId()))
+                .hasSize(0);
     }
 
 }

@@ -70,6 +70,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(
             Exception e
     ){
+        e.printStackTrace();
         return new ResponseEntity<>(
                 new ErrorResponse(
                         ErrorCode.INTERNAL_ERROR.getCode(),

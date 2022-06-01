@@ -99,7 +99,7 @@ public class NoteControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(
                         mapper.writeValueAsString(
-                                NoteDetailResponse.fromEntity(noteToSave, imageUrls)
+                                NoteDetailResponse.fromEntityAndImageUrls(noteToSave, imageUrls)
                         )
                 ));
 
@@ -311,7 +311,7 @@ public class NoteControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(
                         mapper.writeValueAsString(
-                                NoteDetailResponse.fromEntity(savedNote, imageUrls))
+                                NoteDetailResponse.fromEntityAndImageUrls(savedNote, imageUrls))
                 ));
     }
 
@@ -348,11 +348,11 @@ public class NoteControllerTest {
                 .andExpect(content().json(
                         mapper.writeValueAsString(
                                 List.of(
-                                        NoteDetailResponse.fromEntity(
+                                        NoteDetailResponse.fromEntityAndImageUrls(
                                                 savedNote1,
                                                 noteImages1.stream().map(NoteImage::getUrl).collect(Collectors.toList()))
                                         ,
-                                        NoteDetailResponse.fromEntity(
+                                        NoteDetailResponse.fromEntityAndImageUrls(
                                                 savedNote2,
                                                 noteImages2.stream().map(NoteImage::getUrl).collect(Collectors.toList())
                                         )
@@ -419,7 +419,7 @@ public class NoteControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(
                         mapper.writeValueAsString(
-                                NoteDetailResponse.fromEntity(targetNote, updatedImageUrls))
+                                NoteDetailResponse.fromEntityAndImageUrls(targetNote, updatedImageUrls))
                         )
                 );
 

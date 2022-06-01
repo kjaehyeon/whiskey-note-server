@@ -83,7 +83,7 @@ public class NoteServiceTest {
         //Then
         then(noteRepository).should().save(noteCreateRequest.toEntity(user, whiskey, noteBook));
         then(noteImageRepository).should(times(urls.size())).save(any());
-        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntity(
+        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntityAndImageUrls(
                 noteCreateRequest.toEntity(user, whiskey, noteBook),
                 urls
         ));
@@ -121,7 +121,7 @@ public class NoteServiceTest {
         //Then
         then(noteRepository).should().save(noteCreateRequest.toEntity(user, whiskey, noteBook));
         then(noteImageRepository).shouldHaveNoInteractions();
-        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntity(
+        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntityAndImageUrls(
                 noteCreateRequest.toEntity(user, whiskey, noteBook),
                 urls
         ));
@@ -157,7 +157,7 @@ public class NoteServiceTest {
         NoteDetailResponse createdNote = sut.createNote(noteCreateRequest, userDto);
         //Then
         then(noteRepository).should().save(noteCreateRequest.toEntity(user, whiskey, noteBook));
-        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntity(
+        assertThat(createdNote).isEqualTo(NoteDetailResponse.fromEntityAndImageUrls(
                 noteCreateRequest.toEntity(user, whiskey, noteBook),
                 urls
         ));
@@ -251,7 +251,7 @@ public class NoteServiceTest {
 
         //Then
         assertThat(result)
-                .isEqualTo(NoteDetailResponse.fromEntity(createNormalNote(user, whiskey, noteBook), urls));
+                .isEqualTo(NoteDetailResponse.fromEntityAndImageUrls(createNormalNote(user, whiskey, noteBook), urls));
     }
     @DisplayName("[NOTE][GET] 노트 단일 조회 - 존재하지 않는 노트 조회")
     @Test
@@ -312,8 +312,8 @@ public class NoteServiceTest {
         assertThat(result)
                 .hasSize(2)
                 .isNotEmpty()
-                .contains(NoteDetailResponse.fromEntity(note1,note1Urls), Index.atIndex(0))
-                .contains(NoteDetailResponse.fromEntity(note2,note2Urls), Index.atIndex(1));
+                .contains(NoteDetailResponse.fromEntityAndImageUrls(note1,note1Urls), Index.atIndex(0))
+                .contains(NoteDetailResponse.fromEntityAndImageUrls(note2,note2Urls), Index.atIndex(1));
     }
 
     @DisplayName("[NOTE][GET] 노트 목록 조회 - 존재하지 않는 노트북ID 조회")
@@ -369,7 +369,7 @@ public class NoteServiceTest {
         NoteDetailResponse result = sut.updateNote(noteId, noteUpdateRequest, userDto);
         //Then
         assertThat(result).isEqualTo(NoteDetailResponse
-                .fromEntity(noteUpdateRequest.toEntity(user, whiskey, noteBook), urls));
+                .fromEntityAndImageUrls(noteUpdateRequest.toEntity(user, whiskey, noteBook), urls));
 
     }
 

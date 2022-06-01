@@ -38,7 +38,7 @@ public class NoteService {
         final Note savedNote = noteRepository.save(makeNoteFromNoteCreateRequest(user, noteCreateRequest));
         final List<String> imageUrls = uploadAndSaveNoteImages(savedNote, noteCreateRequest);
 
-        return NoteDetailResponse.fromEntity(savedNote, imageUrls);
+        return NoteDetailResponse.fromEntityAndImageUrls(savedNote, imageUrls);
     }
 
     private User getUserFromUserDto(UserDto userDto){
@@ -76,11 +76,17 @@ public class NoteService {
     public NoteDetailResponse getNote(
             Long noteId
     ) {
-        final Note note = noteRepository.findNoteById(noteId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+        final Note note = getNoteFromNoteId(noteId);
         final List<String> imageUrls = getNoteImageUrls(noteId);
 
-        return NoteDetailResponse.fromEntity(note, imageUrls);
+        return NoteDetailResponse.fromEntityAndImageUrls(note, imageUrls);
+    }
+
+    private Note getNoteFromNoteId(
+            Long noteId
+    ){
+        return noteRepository.findNoteById(noteId)
+                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 
     private List<String> getNoteImageUrls(Long noteId){
@@ -98,10 +104,8 @@ public class NoteService {
 
         return noteRepository.findAllByNotebook(noteBook)
                 .stream()
-                .map(note -> NoteDetailResponse.fromEntity(
-                        note,
-                        getNoteImageUrls(note.getId())
-                )).collect(Collectors.toList());
+                .map(note -> NoteDetailResponse.fromEntityAndImageUrls(note, getNoteImageUrls(note.getId()))
+                ).collect(Collectors.toList());
     }
 
     @Transactional
@@ -112,21 +116,31 @@ public class NoteService {
     ) {
         checkNoteWriterByNoteId(noteId, userDto);
 
-        final Note originalNote = noteRepository.findNoteById(noteId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+        final Note originalNote = getNoteFromNoteId(noteId);
         final Note updatedNote = updateOriginalNote(originalNote, noteCreateRequest);
 
         deleteNoteImages(noteId);
 
         final List<String> imageUrls = uploadAndSaveNoteImages(updatedNote, noteCreateRequest);
 
-        return NoteDetailResponse.fromEntity(updatedNote, imageUrls);
+        return NoteDetailResponse.fromEntityAndImageUrls(updatedNote, imageUrls);
     }
 
-    private void checkNoteWriterByNoteId(Long noteId, UserDto userDto){
-        final Note note = noteRepository.findNoteById(noteId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND));
+    private void checkNoteWriterByNoteId(
+            Long noteId,
+            UserDto userDto
+    ){
+        final Note note = getNoteFromNoteId(noteId);
         checkNoteWriter(note, userDto);
+    }
+
+    private void checkNoteWriter(
+            Note note,
+            UserDto userDto
+    ){
+        if(!note.getWriter().getUsername().equals(userDto.getUsername())){
+            throw new GeneralException(ErrorCode.FORBIDDEN);
+        }
     }
 
     private Note updateOriginalNote(
@@ -141,7 +155,9 @@ public class NoteService {
         return noteCreateRequest.updateNoteEntity(originalNote, whiskey, noteBook);
     }
 
-    private void deleteNoteImages(Long noteId){
+    private void deleteNoteImages(
+            Long noteId
+    ){
         final List<NoteImage> noteImages = noteImageRepository.findNoteImageByNote_Id(noteId);
         if(!noteImages.isEmpty()){
             noteImages.forEach(noteImage -> awsS3Service.deleteImage(noteImage.getUrl()));
@@ -157,11 +173,5 @@ public class NoteService {
         checkNoteWriterByNoteId(noteId, userDto);
         deleteNoteImages(noteId);
         noteRepository.deleteNoteById(noteId);
-    }
-
-    private void checkNoteWriter(Note note, UserDto userDto){
-        if(!note.getWriter().getUsername().equals(userDto.getUsername())){
-            throw new GeneralException(ErrorCode.FORBIDDEN);
-        }
     }
 }

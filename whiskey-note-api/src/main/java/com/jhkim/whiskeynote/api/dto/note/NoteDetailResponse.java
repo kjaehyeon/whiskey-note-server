@@ -52,7 +52,7 @@ public class NoteDetailResponse {
 
     private List<String> imageUrls;
 
-    public static NoteDetailResponse fromEntity(
+    public static NoteDetailResponse fromEntityAndImageUrls(
             Note note,
             List<String> imageUrls
     ){

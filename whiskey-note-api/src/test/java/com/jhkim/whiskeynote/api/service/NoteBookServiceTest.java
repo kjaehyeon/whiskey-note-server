@@ -9,6 +9,7 @@ import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
+import com.jhkim.whiskeynote.core.repository.NoteRepository;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
 import org.assertj.core.data.Index;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +36,8 @@ class NoteBookServiceTest {
     @InjectMocks private NoteBookService sut;
     @Mock private NoteBookRepository noteBookRepository;
     @Mock private UserRepository userRepository;
+    @Mock private NoteService noteService;
+    @Mock private NoteRepository noteRepository;
 
     //노트북 정상생성
     @DisplayName("[NOTEBOOK][POST] 노트북 생성 - 정상적인 데이터 & 정상 생성")
@@ -204,6 +207,13 @@ class NoteBookServiceTest {
                 .willReturn(Optional.of(user));
         given(noteBookRepository.findNoteBookById(notebookId))
                 .willReturn(Optional.of(noteBook));
+        given(noteRepository.findAllByNotebook(noteBook))
+                .willReturn(
+                        List.of(
+                                createNote(1L, user, noteBook),
+                                createNote(2L, user, noteBook)
+                        )
+                );
 
         //When
         sut.deleteNoteBook(1L, userDto);
@@ -234,16 +244,20 @@ class NoteBookServiceTest {
     }
 
     private Note createNote(
-            User user, NoteBook noteBook
+            Long noteId,
+            User user,
+            NoteBook noteBook
     ){
-        return Note.of(
-                noteBook,
-                null,
-                user,
-                "wild turkey"
-                ,1F,null,1,1,null,null,null,null,null,1,
-                1,1,1,1,1,1,1,1,1,1,1
-        );
+        Note note =  Note.of(
+                            noteBook,
+                            null,
+                            user,
+                            "wild turkey"
+                            ,1F,null,1,1,null,null,null,null,null,1,
+                            1,1,1,1,1,1,1,1,1,1,1
+                    );
+        note.setId(noteId);
+        return note;
     }
     private User createUser(String username){
         return User.of(username ,"password1","user1@email.com","ROLE_USER", null);
