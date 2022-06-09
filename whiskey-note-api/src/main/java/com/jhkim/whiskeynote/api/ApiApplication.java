@@ -14,8 +14,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         @PropertySource("classpath:application-jwt.properties"),
         @PropertySource("classpath:application-s3.properties")
 })
-public class ApiApplication {
 
+public class ApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApiApplication.class, args);
     }

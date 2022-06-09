@@ -11,11 +11,13 @@ import lombok.Getter;
 public class UserDto {
     private Long id;
     private String username;
+    private String authority;
 
     public static UserDto fromEntity(User user){
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .authority(user.getAuthority())
                 .build();
     }
 }

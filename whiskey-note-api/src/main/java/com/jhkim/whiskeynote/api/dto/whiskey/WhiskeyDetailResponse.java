@@ -28,7 +28,7 @@ public class WhiskeyDetailResponse {
     private String bottledFor;
 
     private String isColored;
-    private String isChillfiltered;
+    private String isChillFiltered;
     private String isSingleCask;
     private String isCaskStrength;
     private String isSmallBatch;
@@ -50,7 +50,7 @@ public class WhiskeyDetailResponse {
                 .size(whiskey.getSize())
                 .bottledFor(whiskey.getBottledFor())
                 .isColored(whiskey.getIsColored().getName_en())
-                .isChillfiltered(whiskey.getIsChillfiltered().getName_en())
+                .isChillFiltered(whiskey.getIsChillfiltered().getName_en())
                 .isSingleCask(whiskey.getIsSingleCask().getName_en())
                 .isCaskStrength(whiskey.getIsCaskStrength().getName_en())
                 .isSmallBatch(whiskey.getIsSmallBatch().getName_en())

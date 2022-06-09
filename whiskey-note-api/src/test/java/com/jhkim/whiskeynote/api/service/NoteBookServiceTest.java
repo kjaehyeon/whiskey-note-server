@@ -262,9 +262,6 @@ class NoteBookServiceTest {
     private User createUser(String username){
         return User.of(username ,"password1","user1@email.com","ROLE_USER", null);
     }
-    private UserDto createUserDto(String username){
-        return UserDto.of(1l, username);
-    }
     private NoteBook createNoteBook(String title, User user){
         return NoteBook.of(title, user, 1,1,1);
     }

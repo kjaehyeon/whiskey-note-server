@@ -49,8 +49,6 @@ class NoteBookControllerTest {
     @Autowired private NoteRepository noteRepository;
     @Autowired private NoteImageRepository noteImageRepository;
 
-    @MockBean private AwsS3Service awsS3Service;
-
     private User user;
     private String token;
 

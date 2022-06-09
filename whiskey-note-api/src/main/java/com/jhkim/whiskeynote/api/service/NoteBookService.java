@@ -71,9 +71,9 @@ public class NoteBookService {
 
         //변경하려는 이름이 중복되는지 확인
         checkNotebookDuplication(noteBookCreateRequest, user);
-        //변경할 노트북이 존재하는지 확인
         NoteBook noteBook = getNoteBookFromNoteBookId(notebookId);
 
+        //노트북의 작성자 인지 확인
         checkNotebookWriter(noteBook, user);
 
         return NoteBookUpdateResponse.fromEntity(
