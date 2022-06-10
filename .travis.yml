@@ -15,12 +15,6 @@ notifications:
     on_failure: always
     secure: XL+nYF+ILf+g+iFPr3aGVhL1CdI78IS0Rk6fWevo5ZdqRNoFfvB32F0y0E0v9pc2ygFyqDPKPNU24y87sqku/J1SsMF/w4r28orPZvNXXZx4M0LGwblK+I/ssGmC7EQ2RsJVVSfpGzKvADCmYv3CUVo46ga4xGGLp4CpYnnVtaCFieL9L81UBEFsQEjTjuPEDj9kalyLfEbisgqNn87CH779zYnpLZkXMUuxCIG20Xm9c8qZYsvuOaIpR9LZZ8fK+ZA7Glg/iDGy+K5cYfuiKJvV1k1mbDJfA31al8wgKYky+BK0HmBn/aprNZc5UWos3/r3ETG5xWMD2a+7V9MtOSlkhflJEa6DKZe1dDb7Z1mi4MIC90JOLqlevx6+X6eBusVWxEPpLAn/cgfh1SSq8wOUbror3R23R2GAFJc9Dm4AI7bYWfLtUWVJv5QC2SxktJyEho9LGxxN2Wk/v30uKk+E3MX07Cv0pCLAvwVT2ByzXBncVJJh/KyNUTld2lmgLws5TURCN8AuVpzIkIXdJMnF4wHSiRlK9NtDv1j89ktaurMl5ACxqkGAbU1w91EIO3xDANoJZKdZbrU8r+9O/COfUPIQM0fO2QTOblfRuV5wsmVSNTJnofq2dV0xvEG2+1/DfNAH23sSmEARj3tMNHcvypbaHkthqzE7Kct+6uc=
 before_install:
-- openssl aes-256-cbc -K $encrypted_643840e698e2_key -iv $encrypted_643840e698e2_iv
-  -in application-db.yml.enc -out ./whiskey-note-api/src/main/resources/application-db.yml
-  -d
-- openssl aes-256-cbc -K $encrypted_5dd2c68cbc88_key -iv $encrypted_5dd2c68cbc88_iv
-  -in application-s3.properties.enc -out ./whiskey-note-api/src/main/resources/application-s3.properties
-  -d
-- openssl aes-256-cbc -K $encrypted_a7e5b5d04a4c_key -iv $encrypted_a7e5b5d04a4c_iv
-  -in application-jwt.properties.enc -out ./whiskey-note-api/src/main/resources/application-jwt.properties
-  -d
+- openssl aes-256-cbc -K $encrypted_b9ff7ce409b6_key -iv $encrypted_b9ff7ce409b6_iv
+  -in configs.tar.enc -out configs.tar -d
+- tar xvf configs.tar --directory ./whiskey-note-api/src/main/resources
