@@ -1,20 +1,29 @@
 language: java
 jdk:
-  - openjdk11
-
+- openjdk11
 branches:
   only:
-    - main
-
+  - main
 cache:
   directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.gradle'
-
+  - "$HOME/.m2/repository"
+  - "$HOME/.gradle"
 script: "./gradlew clean build"
-
 notifications:
   email:
     recipients:
-      - jacob9404@gmail.com
-  slack: slack-secret-key
+    - jacob9404@gmail.com
+  slack: SLACK-KEY
+before_install:
+- openssl aes-256-cbc -K $encrypted_a7e5b5d04a4c_key -iv $encrypted_a7e5b5d04a4c_iv
+  -in application-jwt.properties.enc -out ./whiskey-note-api/src/main/resources/application-jwt.properties
+  -d
+- openssl aes-256-cbc -K $encrypted_5dd2c68cbc88_key -iv $encrypted_5dd2c68cbc88_iv
+  -in application-s3.properties.enc -out ./whiskey-note-api/src/main/resources/application-s3.properties
+  -d
+- openssl aes-256-cbc -K $encrypted_643840e698e2_key -iv $encrypted_643840e698e2_iv
+  -in application-db.yml.enc -out ./whiskey-note-api/src/main/resources/application-db.yml
+  -d
+env:
+  global:
+    secure: ba0FigQ4nwoChZShmHmUuU4KYuNzDa6O+5Bu5b+b3Hdnr/5n4KwXlKvP2ASe4QLB6E0LhXYqAxj7UIUBXClkWM/0OpRd9dppa76VwXNxnFZGOZdXzDLc2YBdw4Xam9W2aFm0oePJS/9ul/u1v59m6k2m/80pX9JJrwPri8v4ntIFFg63LsBL2pT6l3FAR3pzwfsJVJ8nXHS105cPVJUPOVyXhIgABy+VoGvILFsoTUSsrSjtxU8hqwmy5bP5sNC+DW+6P9WbD4Hck3wFmoKXXGLQdSJQuqlxmitIOT/bqzv2oYBpQ6p84ICETITQPPhVL3ukEa2RZZFlYOdfN9Q1A+F2aDhf48xRN28W4Td7SL3KiC9Q995KM5Vl4uTuvdW24I5gsKmU0HH92Tcxl78tXOOrD36WnqlOwI7ScxfP9lEt5OZybHW9/Xj48zrGV1qJQnRbyz/KZU0Sx3YLZVKLR4ryF25h+2+FNXnmxcIt9+AYla/jw71cW6Vq3KTQPk9luaCRSvsz4xSFqew4FsIb4ixm1c4klL0o6V1a3Ug94txbO0dwFP1mjat2AqAwWoRLm610xZAbnOOeL3stI4qAbssGklPNgZTdzbck8Db+K3EVDBE2B2D4sXrNA6JQ1HKrGeOGnP10kPvGSD2pHTWlZ5nWR5HL8EwPkKpuOa+cOQE=
