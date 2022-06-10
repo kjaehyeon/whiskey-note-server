@@ -17,4 +17,4 @@ notifications:
 before_install:
 - openssl aes-256-cbc -K $encrypted_b9ff7ce409b6_key -iv $encrypted_b9ff7ce409b6_iv
   -in configs.tar.enc -out configs.tar -d
-- tar xvf configs.tar --directory ./whiskey-note-api/src/main/resources
+- tar xvf configs.tar
