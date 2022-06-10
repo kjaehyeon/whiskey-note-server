@@ -1,29 +1,15 @@
 #!/bin/bash
-REPOSITORY=/home/ec2-user/app/step1
+REPOSITORY=/home/ec2-user/app/step2
 PROJECT_NAME=whiskey-note-server
 API_MODULE_NAME=whiskey-note-api
 
-cd $REPOSITORY/$PROJECT_NAME/
-
-echo "> Git Pull"
-
-git pull
-
-echo "> 프로젝트 Build 시작"
-
-./gradlew build
-
-echo "> step1 디렉토리로 이동"
-
-cd $REPOSITORY
-
 echo "> Build 파일 복사"
 
-cp $REPOSITORY/$PROJECT_NAME/$API_MODULE_NAME/build/libs/*SNAPSHOT.jar $REPOSITORY/
+cp $REPOSITORY/zip/*.jar $REPOSITORY/
 
 echo "> 현재 실행 중인 어플리케이션 PID 확인"
 
-CURRENT_PID=$(pgrep -f ${API_MODULE_NAME}*.jar)
+CURRENT_PID=$(pgrep -fl ${API_MODULE_NAME} | grep jar | awk'{print $1}')
 
 echo "> PID : $CURRENT_PID"
 
@@ -37,9 +23,15 @@ fi
 
 echo "> 새 어플리케이션 배포"
 
-JAR_NAME=$(ls -tr $REPOSITORY/ | grep *.jar | tail -n 1)
+JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
 
 echo "> JAR Name: $JAR_NAME"
+
+echo "> $JAR_NAME 에 실행권한 추가"
+
+chmod +x $JAR_NAME
+
+echo "> $JAR_NAME 실행"
 
 nohup java -jar -Dspring.config.location=classpath:/application.yml,classpath:/application-s3.properties,classpath:/application-jwt.properties,classpath:/application-db.yml  -Dspring.profiles.active=prd $REPOSITORY/$JAR_NAME 2>&1 &
 

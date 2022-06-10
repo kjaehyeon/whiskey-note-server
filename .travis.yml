@@ -15,9 +15,13 @@ notifications:
     on_failure: always
     secure: XL+nYF+ILf+g+iFPr3aGVhL1CdI78IS0Rk6fWevo5ZdqRNoFfvB32F0y0E0v9pc2ygFyqDPKPNU24y87sqku/J1SsMF/w4r28orPZvNXXZx4M0LGwblK+I/ssGmC7EQ2RsJVVSfpGzKvADCmYv3CUVo46ga4xGGLp4CpYnnVtaCFieL9L81UBEFsQEjTjuPEDj9kalyLfEbisgqNn87CH779zYnpLZkXMUuxCIG20Xm9c8qZYsvuOaIpR9LZZ8fK+ZA7Glg/iDGy+K5cYfuiKJvV1k1mbDJfA31al8wgKYky+BK0HmBn/aprNZc5UWos3/r3ETG5xWMD2a+7V9MtOSlkhflJEa6DKZe1dDb7Z1mi4MIC90JOLqlevx6+X6eBusVWxEPpLAn/cgfh1SSq8wOUbror3R23R2GAFJc9Dm4AI7bYWfLtUWVJv5QC2SxktJyEho9LGxxN2Wk/v30uKk+E3MX07Cv0pCLAvwVT2ByzXBncVJJh/KyNUTld2lmgLws5TURCN8AuVpzIkIXdJMnF4wHSiRlK9NtDv1j89ktaurMl5ACxqkGAbU1w91EIO3xDANoJZKdZbrU8r+9O/COfUPIQM0fO2QTOblfRuV5wsmVSNTJnofq2dV0xvEG2+1/DfNAH23sSmEARj3tMNHcvypbaHkthqzE7Kct+6uc=
 before_deploy:
-  - zip -r whiskey-note-webservice *
-  - mkdir -p deploy
-  - mv whiskey-note-webservice.zip deploy/whiskey-note-webservice.zip
+  - mkdir -p before-deploy
+  - cp scripts/*.sh before-deploy/
+  - cp appspec.yml before-deploy/
+  - cp build/libs/*.jar before-deploy/
+  - cd before-deploy m&& zip -r before-deploy *
+  - cd ../ && mkdir -p deploy
+  - mv before-deploy/before-deploy.zip deploy/whiskey-note-webservice.zip
 deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY
