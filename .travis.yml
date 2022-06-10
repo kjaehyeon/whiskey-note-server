@@ -30,6 +30,18 @@ deploy:
     wait-until-deployed: true
     on:
       branch: main
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: whiskey-note-build #버킷 이름
+    key: whiskey-note-webservice.zip #빌드 파일명
+    bundle_type: zip #압축 확장자
+    application: whiskey-note-codedeploy #codedeploy 어플리케이션 이름
+    deployment_group: whiskey-note-webservice-group
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      branch: main
 before_install:
 - openssl aes-256-cbc -K $encrypted_b9ff7ce409b6_key -iv $encrypted_b9ff7ce409b6_iv
   -in configs.tar.enc -out configs.tar -d
