@@ -20,7 +20,7 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     database: mysql
   servlet:
     multipart:
@@ -33,7 +33,6 @@ spring:
       on-profile: prd
   jpa:
     open-in-view: false
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
