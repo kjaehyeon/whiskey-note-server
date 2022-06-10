@@ -9,9 +9,9 @@ cp $REPOSITORY/zip/*SNAPSHOT.jar $REPOSITORY/
 
 echo "> 현재 실행 중인 어플리케이션 PID 확인"
 
-CURRENT_PID=$(pgrep -fl ${API_MODULE_NAME} | grep jar | awk'{print $1}')
+CURRENT_PID=$(pgrep -fl whiskey-note-api | grep jar | awk'{print $1}')
 
-echo "> PID : $CURRENT_PID"
+echo "> 현재 구동 중인 어플리케이션 PID : $CURRENT_PID"
 
 if [ -z "$CURRENT_PID" ]; then
 	echo "> 현재 진행 중인 어플리케이션이 없으므로 종료하지 않습니다."
@@ -33,5 +33,5 @@ chmod +x $JAR_NAME
 
 echo "> $JAR_NAME 실행"
 
-nohup java -jar -Dspring.config.location=classpath:/application.yml,classpath:/application-s3.properties,classpath:/application-jwt.properties,classpath:/application-db.yml  -Dspring.profiles.active=prd $REPOSITORY/$JAR_NAME 2>&1 &
+nohup java -jar -Dspring.config.location=classpath:/application.yml,classpath:/application-s3.properties,classpath:/application-jwt.properties,classpath:/application-db.yml -Dspring.profiles.active=prd $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 
