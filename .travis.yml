@@ -28,6 +28,8 @@ deploy:
     acl: private #zip파일 접근을 private으로
     local_dir: deploy #before_deploy에서 생성한 폴더
     wait-until-deployed: true
+    on:
+      branch: main
 before_install:
 - openssl aes-256-cbc -K $encrypted_b9ff7ce409b6_key -iv $encrypted_b9ff7ce409b6_iv
   -in configs.tar.enc -out configs.tar -d
