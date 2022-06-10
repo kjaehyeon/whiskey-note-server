@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - corretto-11
+  - openjdk11
 
 branches:
   only:
