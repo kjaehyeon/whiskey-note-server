@@ -9,7 +9,7 @@ cp $REPOSITORY/zip/*SNAPSHOT.jar $REPOSITORY/
 
 echo "> 현재 실행 중인 어플리케이션 PID 확인"
 
-CURRENT_PID=$(pgrep -fl whiskey-note-api | grep jar | awk'{print $1}')
+CURRENT_PID=$(pgrep -f ${API_MODULE_NAME}*.jar)
 
 echo "> 현재 구동 중인 어플리케이션 PID : $CURRENT_PID"
 
