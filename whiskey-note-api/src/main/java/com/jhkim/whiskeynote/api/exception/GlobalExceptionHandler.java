@@ -5,6 +5,7 @@ import com.amazonaws.SdkClientException;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {
@@ -70,7 +72,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(
             Exception e
     ){
-        e.printStackTrace();
+        log.warn(e.getMessage());
         return new ResponseEntity<>(
                 new ErrorResponse(
                         ErrorCode.INTERNAL_ERROR.getCode(),

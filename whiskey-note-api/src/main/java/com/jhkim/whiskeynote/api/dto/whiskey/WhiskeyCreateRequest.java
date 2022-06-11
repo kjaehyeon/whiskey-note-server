@@ -7,8 +7,6 @@ import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import org.springframework.stereotype.Service;
 
 @Data
 @Builder

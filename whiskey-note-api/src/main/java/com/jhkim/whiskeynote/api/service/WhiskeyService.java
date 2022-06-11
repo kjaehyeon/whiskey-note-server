@@ -2,7 +2,6 @@ package com.jhkim.whiskeynote.api.service;
 
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyCreateRequest;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
-import com.jhkim.whiskeynote.core.entity.User;
 import com.jhkim.whiskeynote.core.exception.ErrorCode;
 import com.jhkim.whiskeynote.core.exception.GeneralException;
 import com.jhkim.whiskeynote.core.repository.WhiskeyRepository;

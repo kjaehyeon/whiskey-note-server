@@ -3,7 +3,6 @@ package com.jhkim.whiskeynote.api.controller;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyCreateRequest;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
 import com.jhkim.whiskeynote.api.service.WhiskeyService;
-import com.jhkim.whiskeynote.core.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

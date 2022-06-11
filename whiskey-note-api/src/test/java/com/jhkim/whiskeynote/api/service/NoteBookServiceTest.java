@@ -108,8 +108,8 @@ class NoteBookServiceTest {
         List<NoteBookDetailResponse> list = sut.getNoteBooks(userDto);
 
         //Then
-        assertThat(list).hasSize(3);
         assertThat(list)
+                .hasSize(3)
                 .contains(noteBooks.get(0), Index.atIndex(0))
                 .contains(noteBooks.get(1), Index.atIndex(1))
                 .contains(noteBooks.get(2), Index.atIndex(2));

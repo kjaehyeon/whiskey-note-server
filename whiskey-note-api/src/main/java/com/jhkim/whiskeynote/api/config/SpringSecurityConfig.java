@@ -1,6 +1,5 @@
 package com.jhkim.whiskeynote.api.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jhkim.whiskeynote.api.exception.ExceptionHandlerFilter;
 import com.jhkim.whiskeynote.api.jwt.JwtAuthorizationFilter;
 import com.jhkim.whiskeynote.api.jwt.JwtUtils;
@@ -14,8 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -28,7 +25,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable(); //basic Authentication filter 비활성
         http.csrf().disable();
-        http.rememberMe().disable();
 
         //세션을 사용하지 않음
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

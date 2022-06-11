@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
-public class NoteControllerTest {
+class NoteControllerTest {
     @Autowired private MockMvc mvc;
     @Autowired private ObjectMapper mapper;
     @Autowired private UserRepository userRepository;
@@ -458,7 +458,7 @@ public class NoteControllerTest {
         assertThat(noteRepository.findNoteById(savedNote.getId()))
                 .isEmpty();
         assertThat(noteImageRepository.findNoteImageByNote_Id(savedNote.getId()))
-                .hasSize(0);
+                .isEmpty();
     }
 
     private NoteCreateRequest createNormalNoteCreateRequest(){

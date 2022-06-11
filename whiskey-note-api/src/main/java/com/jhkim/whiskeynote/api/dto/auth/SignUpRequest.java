@@ -3,7 +3,6 @@ package com.jhkim.whiskeynote.api.dto.auth;
 import com.jhkim.whiskeynote.core.dto.UserCreateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

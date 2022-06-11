@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
-public class JwtTest {
+class JwtTest {
     private final MockMvc mvc;
     private final JwtUtils jwtUtils;
     private final JwtKey jwtKey;

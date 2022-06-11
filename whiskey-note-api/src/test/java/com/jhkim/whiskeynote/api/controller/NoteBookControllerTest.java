@@ -16,7 +16,6 @@ import com.jhkim.whiskeynote.core.repository.NoteBookRepository;
 import com.jhkim.whiskeynote.core.repository.NoteImageRepository;
 import com.jhkim.whiskeynote.core.repository.NoteRepository;
 import com.jhkim.whiskeynote.core.repository.UserRepository;
-import com.jhkim.whiskeynote.core.service.AwsS3Service;
 import com.jhkim.whiskeynote.core.service.DatabaseCleanup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -263,7 +261,7 @@ class NoteBookControllerTest {
         assertThat(noteRepository.findNoteById(savedNote.getId()))
                 .isEmpty();
         assertThat(noteImageRepository.findNoteImageByNote_Id(savedNote.getId()))
-                .hasSize(0);
+                .isEmpty();
     }
 
 }

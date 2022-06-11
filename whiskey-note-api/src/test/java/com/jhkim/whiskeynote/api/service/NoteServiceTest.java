@@ -34,7 +34,7 @@ import static org.mockito.Mockito.times;
 
 @DisplayName("[유닛테스트] SERVICE - NOTE")
 @ExtendWith(MockitoExtension.class)
-public class NoteServiceTest {
+class NoteServiceTest {
     @InjectMocks private NoteService sut;
     @Mock private NoteRepository noteRepository;
     @Mock private NoteBookRepository noteBookRepository;
