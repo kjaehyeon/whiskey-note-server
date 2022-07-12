@@ -30,4 +30,17 @@ public class WhiskeyService {
                         .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND))
         );
     }
+
+    public WhiskeyDetailResponse updateWhiskey(
+            Long whiskeyId,
+            WhiskeyCreateRequest whiskeyUpdateRequest
+    ) {
+        return null;
+    }
+
+    public void deleteWhiskey(
+            Long whiskeyId
+    ) {
+
+    }
 }

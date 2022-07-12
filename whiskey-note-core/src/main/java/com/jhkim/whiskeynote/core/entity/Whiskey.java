@@ -6,6 +6,8 @@ import com.jhkim.whiskeynote.core.constant.WhiskeyDistrict;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -28,7 +30,7 @@ public class Whiskey extends BaseEntity{
 
     private String bottler;
     private Integer statedAge;//숙성년수
-    private Integer vintage;
+    private LocalDate vintage;
     private String caskType;
 
     private Float alc;

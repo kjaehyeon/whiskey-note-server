@@ -1,8 +1,10 @@
 package com.jhkim.whiskeynote.api.controller;
 
+import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyCreateRequest;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
 import com.jhkim.whiskeynote.api.service.WhiskeyService;
+import com.jhkim.whiskeynote.core.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,10 @@ import javax.validation.Valid;
 public class WhiskeyController {
     private final WhiskeyService whiskeyService;
 
+    //관리자만 가능하도록 하자.
     @PostMapping
-    public ResponseEntity<Void> createWhiskey(
-            @Valid @RequestBody WhiskeyCreateRequest whiskeyCreateRequest
+    public ResponseEntity<WhiskeyDetailResponse> createWhiskey(
+            @Valid @ModelAttribute WhiskeyCreateRequest whiskeyCreateRequest
     ){
         whiskeyService.createWhiskey(whiskeyCreateRequest);
         return ResponseEntity.ok().build();
@@ -34,11 +37,22 @@ public class WhiskeyController {
         );
     }
 
-//    @PutMapping("/{whiskeyId}")
-//    public ResponseEntity<WhiskeyDetailResponse> updateWhiskey(
-//            @PathVariable Long whiskeyId,
-//            @Vaild RequestBody WhiskeyCreateRe
-//    ){
-//
-//    }
+    @PutMapping("/{whiskeyId}")
+    public ResponseEntity<WhiskeyDetailResponse> updateWhiskey(
+            @PathVariable Long whiskeyId,
+            @Valid @RequestBody WhiskeyCreateRequest whiskeyUpdateRequest
+    ){
+        return new ResponseEntity<>(
+                whiskeyService.updateWhiskey(whiskeyId, whiskeyUpdateRequest),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/{whiskeyId}")
+    public ResponseEntity<Void> deleteWhiskey(
+            @PathVariable Long whiskeyId
+    ){
+        whiskeyService.deleteWhiskey(whiskeyId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor(staticName = "of")
@@ -19,7 +23,7 @@ public class WhiskeyDetailResponse {
 
     private String bottler;
     private Integer statedAge;//숙성년수
-    private Integer vintage;
+    private LocalDate vintage;
     private String caskType;
 
     private Float alc;
@@ -32,6 +36,8 @@ public class WhiskeyDetailResponse {
     private String isSingleCask;
     private String isCaskStrength;
     private String isSmallBatch;
+
+    private List<String> imageUrls;
 
     public static WhiskeyDetailResponse fromEntity(Whiskey whiskey) {
         return WhiskeyDetailResponse.builder()

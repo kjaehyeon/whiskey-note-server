@@ -64,7 +64,7 @@ public class QWhiskey extends EntityPathBase<Whiskey> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
-    public final NumberPath<Integer> vintage = createNumber("vintage", Integer.class);
+    public final DatePath<java.time.LocalDate> vintage = createDate("vintage", java.time.LocalDate.class);
 
     public QWhiskey(String variable) {
         super(Whiskey.class, forVariable(variable));
