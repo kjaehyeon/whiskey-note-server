@@ -33,4 +33,12 @@ public class WhiskeyController {
                 HttpStatus.OK
         );
     }
+
+//    @PutMapping("/{whiskeyId}")
+//    public ResponseEntity<WhiskeyDetailResponse> updateWhiskey(
+//            @PathVariable Long whiskeyId,
+//            @Vaild RequestBody WhiskeyCreateRe
+//    ){
+//
+//    }
 }
