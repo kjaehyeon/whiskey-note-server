@@ -42,7 +42,7 @@ class WhiskeyServiceTest {
     /**
      * createWhiskey()
      */
-    @DisplayName("[WHISKEY][CREATE] 위스키 정상 생성(이미지 있음)")
+    @DisplayName("[WHISKEY][CREATE] 위스키 정상 생성 요청 + 이미지")
     @Test
     void givenNormalWhiskeyCreateRequest_whenCreateWhiskey_thenReturnWhiskeyDetailResponse(){
         //Given
