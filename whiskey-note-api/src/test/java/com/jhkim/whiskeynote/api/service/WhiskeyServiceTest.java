@@ -42,25 +42,27 @@ class WhiskeyServiceTest {
     /**
      * createWhiskey()
      */
-    @DisplayName("[WHISKEY][CREATE] 위스키 정상 생성(이미지 있음")
+    @DisplayName("[WHISKEY][CREATE] 위스키 정상 생성(이미지 있음)")
     @Test
     void givenNormalWhiskeyCreateRequest_whenCreateWhiskey_thenReturnWhiskeyDetailResponse(){
         //Given
         WhiskeyCreateRequest whiskeyCreateRequest =
                 createWhiskeyCreateRequest(createMultiFiles(2));
         Whiskey whiskey = whiskeyCreateRequest.toEntity();
+        whiskey.setId(1L);
         List<String> urls = List.of("url1", "url2");
 
-        given(awsS3Service.uploadImages(
-                whiskeyCreateRequest.getImages(),
-                S3Path.WHISKEY_IMAGE.getFolderName())).willReturn(urls);
+        given(awsS3Service.uploadImages(whiskeyCreateRequest.getImages(), S3Path.WHISKEY_IMAGE.getFolderName()))
+                .willReturn(urls);
+        given(whiskeyRepository.save(whiskeyCreateRequest.toEntity()))
+                .willReturn(whiskey);
 
         //When
         WhiskeyDetailResponse result = sut.createWhiskey(whiskeyCreateRequest);
 
         //Then
         then(whiskeyRepository).should().save(whiskey);
-        then(whiskeyImageRepository).should(times(urls.size())).save(any());
+        then(whiskeyImageRepository).should().saveAll(any());
         assertThat(result).isEqualTo(WhiskeyDetailResponse.fromEntityAndImageUrls(whiskey, urls));
     }
     private WhiskeyCreateRequest createWhiskeyCreateRequest(

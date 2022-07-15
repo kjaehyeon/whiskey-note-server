@@ -23,8 +23,10 @@ public class WhiskeyController {
     public ResponseEntity<WhiskeyDetailResponse> createWhiskey(
             @Valid @ModelAttribute WhiskeyCreateRequest whiskeyCreateRequest
     ){
-        whiskeyService.createWhiskey(whiskeyCreateRequest);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(
+                whiskeyService.createWhiskey(whiskeyCreateRequest),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/{whiskeyId}")

@@ -84,6 +84,7 @@ class WhiskeyControllerTest {
                         "oloroso sherry cask", 40.0f, 100000, 700, "regular",
                         Bool3.YES, Bool3.YES, Bool3.UNKNOWN, Bool3.UNKNOWN, Bool3.NO , null);
         Whiskey whiskeyToSave = whiskeyCreateRequest.toEntity();
+        whiskeyToSave.setId(1L);
 
         given(awsS3Service.uploadImages(any(), any()))
                 .willReturn(imageUrls);
@@ -139,16 +140,16 @@ class WhiskeyControllerTest {
         return imageUrls;
     }
 
-    @DisplayName("[WHISKEY][POST] 비정상적인 whiskeyCreateRequest인 경우")
-    @ParameterizedTest
-    @MethodSource //여기에 메서드 이름 명시하지 않으면, 테스트 메서드와 이름이 똑같은 메서드를 찾아서 넣는다.
-    void givenInvalidWhiskeyCreateRequest_whenCreateWhiskey_thenReturn400(
-            WhiskeyCreateRequest whiskeyCreateRequest
-    ) {
-        //Given
-
-        //When & Then
-    }
+//    @DisplayName("[WHISKEY][POST] 비정상적인 whiskeyCreateRequest인 경우")
+//    @ParameterizedTest
+//    @MethodSource //여기에 메서드 이름 명시하지 않으면, 테스트 메서드와 이름이 똑같은 메서드를 찾아서 넣는다.
+//    void givenInvalidWhiskeyCreateRequest_whenCreateWhiskey_thenReturn400(
+//            WhiskeyCreateRequest whiskeyCreateRequest
+//    ) {
+//        //Given
+//
+//        //When & Then
+//    }
 
     private static Stream<WhiskeyCreateRequest> givenInvalidWhiskeyCreateRequest_whenCreateWhiskey_thenReturn400(){
         return null;

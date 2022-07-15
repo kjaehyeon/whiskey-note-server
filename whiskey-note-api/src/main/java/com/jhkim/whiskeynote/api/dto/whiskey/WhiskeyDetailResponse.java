@@ -42,7 +42,7 @@ public class WhiskeyDetailResponse {
     public static WhiskeyDetailResponse fromEntityAndImageUrls(
             Whiskey whiskey,
             List<String> urls
-            ) {
+        ) {
         return WhiskeyDetailResponse.builder()
                 .whiskeyId(whiskey.getId())
                 .brand(whiskey.getBrand())

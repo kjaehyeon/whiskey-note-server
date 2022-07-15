@@ -7,6 +7,7 @@ import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ public class WhiskeyCreateRequest {
 
     private String bottler;
     private Integer statedAge;//숙성년수
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate vintage;
     private String caskType;
 
