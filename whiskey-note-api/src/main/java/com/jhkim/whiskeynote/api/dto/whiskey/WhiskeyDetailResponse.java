@@ -39,7 +39,10 @@ public class WhiskeyDetailResponse {
 
     private List<String> imageUrls;
 
-    public static WhiskeyDetailResponse fromEntity(Whiskey whiskey) {
+    public static WhiskeyDetailResponse fromEntityAndImageUrls(
+            Whiskey whiskey,
+            List<String> urls
+            ) {
         return WhiskeyDetailResponse.builder()
                 .whiskeyId(whiskey.getId())
                 .brand(whiskey.getBrand())
@@ -60,6 +63,7 @@ public class WhiskeyDetailResponse {
                 .isSingleCask(whiskey.getIsSingleCask().getName_en())
                 .isCaskStrength(whiskey.getIsCaskStrength().getName_en())
                 .isSmallBatch(whiskey.getIsSmallBatch().getName_en())
+                .imageUrls(urls)
                 .build();
     }
 }

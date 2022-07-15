@@ -1,7 +1,6 @@
 package com.jhkim.whiskeynote.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jhkim.whiskeynote.api.dto.note.NoteCreateRequest;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyCreateRequest;
 import com.jhkim.whiskeynote.api.dto.whiskey.WhiskeyDetailResponse;
 import com.jhkim.whiskeynote.api.jwt.JwtProperties;
@@ -34,13 +33,11 @@ import java.beans.PropertyDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -99,7 +96,7 @@ class WhiskeyControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(
                                 mapper.writeValueAsString(
-                                        WhiskeyDetailResponse.fromEntity(whiskeyToSave)
+                                        WhiskeyDetailResponse.fromEntityAndImageUrls(whiskeyToSave, imageUrls)
                                 )
                         ));
 

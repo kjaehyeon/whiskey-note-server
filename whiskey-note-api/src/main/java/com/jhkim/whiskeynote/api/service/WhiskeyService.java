@@ -9,25 +9,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WhiskeyService {
     private final WhiskeyRepository whiskeyRepository;
 
     @Transactional
-    public void createWhiskey(
+    public WhiskeyDetailResponse createWhiskey(
             WhiskeyCreateRequest whiskeyCreateRequest
     ){
         whiskeyRepository.save(whiskeyCreateRequest.toEntity());
+        return null;
     }
 
     @Transactional
     public WhiskeyDetailResponse getWhiskey(
             Long whiskeyId
     ){
-        return WhiskeyDetailResponse.fromEntity(
+        return WhiskeyDetailResponse.fromEntityAndImageUrls(
                 whiskeyRepository.findWhiskeyById(whiskeyId)
-                        .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND))
+                        .orElseThrow(() -> new GeneralException(ErrorCode.RESOURCE_NOT_FOUND)),
+                List.of()
         );
     }
 
