@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum S3Path {
-    NOTE_IMAGE("note-image");
+    NOTE_IMAGE("note-image"),
+    WHISKEY_IMAGE("whiskey-image");
 
     private final String folderName;
 }

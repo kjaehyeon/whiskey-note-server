@@ -50,7 +50,6 @@ class NoteBookControllerTest {
     private User user;
     private String token;
 
-
     @BeforeEach
     void set_Up(){
         databaseCleanup.execute();

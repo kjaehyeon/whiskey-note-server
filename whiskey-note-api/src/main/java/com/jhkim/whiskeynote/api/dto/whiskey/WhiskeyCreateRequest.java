@@ -7,6 +7,12 @@ import com.jhkim.whiskeynote.core.entity.Whiskey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,12 +22,13 @@ public class WhiskeyCreateRequest {
     private String name;
     private String distillery;
 
-    private String category;
-    private String district;
+    private WhiskeyCategory category;
+    private WhiskeyDistrict district;
 
     private String bottler;
     private Integer statedAge;//숙성년수
-    private Integer vintage;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate vintage;
     private String caskType;
 
     private Float alc;
@@ -29,20 +36,21 @@ public class WhiskeyCreateRequest {
     private Integer size; //밀리리터
     private String bottledFor;
 
-    //@Range(min=0, max=2)
-    private String isColored;
-    private String isChillfiltered;
-    private String isSingleCask;
-    private String isCaskStrength;
-    private String isSmallBatch;
+    private Bool3 isColored;
+    private Bool3 isChillfiltered;
+    private Bool3 isSingleCask;
+    private Bool3 isCaskStrength;
+    private Bool3 isSmallBatch;
+
+    private List<MultipartFile> images;
 
     public Whiskey toEntity(){
         return Whiskey.builder()
                 .brand(brand)
                 .name(name)
                 .distillery(distillery)
-                .category(WhiskeyCategory.valueOf(category))
-                .district(WhiskeyDistrict.valueOf(district))
+                .category(category)
+                .district(district)
                 .bottler(bottler)
                 .statedAge(statedAge)
                 .vintage(vintage)
@@ -51,11 +59,11 @@ public class WhiskeyCreateRequest {
                 .retailPrice(retailPrice)
                 .size(size)
                 .bottledFor(bottledFor)
-                .isColored(Bool3.valueOf(isColored))
-                .isChillfiltered(Bool3.valueOf(isChillfiltered))
-                .isSingleCask(Bool3.valueOf(isSingleCask))
-                .isCaskStrength(Bool3.valueOf(isCaskStrength))
-                .isSmallBatch(Bool3.valueOf(isSmallBatch))
+                .isColored(isColored)
+                .isChillfiltered(isChillfiltered)
+                .isSingleCask(isSingleCask)
+                .isCaskStrength(isCaskStrength)
+                .isSmallBatch(isSmallBatch)
                 .build();
     }
 }

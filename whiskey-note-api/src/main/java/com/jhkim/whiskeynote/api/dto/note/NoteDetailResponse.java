@@ -18,7 +18,7 @@ public class NoteDetailResponse {
 
     @NotNull
     private Long notebookId;
-    private WhiskeyDetailResponse whiskey;
+    private Long whiskeyId;
     private String writer;
 
     @NotNull
@@ -59,7 +59,7 @@ public class NoteDetailResponse {
         return NoteDetailResponse.builder()
                 .id(note.getId())
                 .writer(note.getWriter().getUsername())
-                .whiskey(WhiskeyDetailResponse.fromEntity(note.getWhiskey()))
+                .whiskeyId(note.getWhiskey().getId())
                 .notebookId(note.getNotebook().getId())
                 .whiskeyName(note.getWhiskeyName())
                 .distiller(note.getDistiller())

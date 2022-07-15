@@ -69,6 +69,7 @@ public class NoteCreateRequest {
     @Range(min=0, max=100)
     private Integer salty;
 
+    //추후에 이미지 개수도 제한하자.
     private List<MultipartFile> images;
 
     public Note toEntity(
