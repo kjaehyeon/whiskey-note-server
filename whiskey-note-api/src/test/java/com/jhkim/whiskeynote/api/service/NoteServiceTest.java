@@ -186,6 +186,7 @@ class NoteServiceTest {
 
         //When
         Throwable throwable = catchThrowable(() -> sut.createNote(noteCreateRequest, userDto));
+
         //Then
         assertThat(throwable).isInstanceOf(GeneralException.class);
         assertThat(((GeneralException)throwable)
